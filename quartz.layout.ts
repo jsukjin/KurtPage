@@ -39,11 +39,6 @@ export const defaultContentPageLayout: PageLayout = {
       ],
     }),
     Component.Explorer(),
-	// 리스트 페이지(폴더 등)에서도 보고 싶다면 여기에도 추가
-    Component.DesktopOnly(Component.RecentNotes({ 
-      title: "Recent Notes", 
-      limit: 5 
-    })),
   ],
   right: [
     Component.Graph(),

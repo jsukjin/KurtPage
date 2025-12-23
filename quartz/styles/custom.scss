@@ -2,3 +2,69 @@
 @use "./themes";
 
 // put your custom CSS here!
+/* quartz/styles/custom.scss */
+
+// 1. 모든 콜아웃 공통 스타일
+.callout {
+  border: 1px solid rgba(100, 100, 100, 0.2) !important;
+  border-radius: 8px !important;
+  margin: 1rem 0 !important;
+  padding: 12px 16px !important;
+  border-left-width: 5px !important;
+  border-left-style: solid !important;
+  
+  .callout-title {
+    font-weight: 800 !important;
+    margin-bottom: 4px;
+  }
+}
+
+// 🔵 파란색 계열: info, note, todo, abstract, summary
+.callout[data-callout="info"], .callout[data-callout="note"], 
+.callout[data-callout="todo"], .callout[data-callout="abstract"], 
+.callout[data-callout="summary"] {
+  border-left-color: #007bff !important;
+  background-color: rgba(0, 123, 255, 0.1) !important;
+  .callout-title, .callout-icon { color: #007bff !important; }
+}
+
+// 🔴 빨간색 계열: danger, error, bug, fail, missing
+.callout[data-callout="danger"], .callout[data-callout="error"], 
+.callout[data-callout="bug"], .callout[data-callout="fail"], 
+.callout[data-callout="missing"] {
+  border-left-color: #e91e63 !important;
+  background-color: rgba(233, 30, 99, 0.1) !important;
+  .callout-title, .callout-icon { color: #e91e63 !important; }
+}
+
+// 🟡 노란/주황색 계열: warning, caution, attention, question, help, faq
+.callout[data-callout="warning"], .callout[data-callout="caution"], 
+.callout[data-callout="attention"], .callout[data-callout="question"], 
+.callout[data-callout="help"], .callout[data-callout="faq"] {
+  border-left-color: #ffa500 !important;
+  background-color: rgba(255, 165, 0, 0.1) !important;
+  .callout-title, .callout-icon { color: #ffa500 !important; }
+}
+
+// 🟢 녹색 계열: success, check, done, tip, hint, important
+.callout[data-callout="success"], .callout[data-callout="check"], 
+.callout[data-callout="done"], .callout[data-callout="tip"], 
+.callout[data-callout="hint"], .callout[data-callout="important"] {
+  border-left-color: #4caf50 !important;
+  background-color: rgba(76, 175, 80, 0.1) !important;
+  .callout-title, .callout-icon { color: #4caf50 !important; }
+}
+
+// 🟣 보라색 계열: example
+.callout[data-callout="example"] {
+  border-left-color: #9c27b0 !important;
+  background-color: rgba(156, 39, 176, 0.1) !important;
+  .callout-title, .callout-icon { color: #9c27b0 !important; }
+}
+
+// ⚪ 회색 계열: quote, cite
+.callout[data-callout="quote"], .callout[data-callout="cite"] {
+  border-left-color: #888888 !important;
+  background-color: rgba(136, 136, 136, 0.1) !important;
+  .callout-title, .callout-icon { color: #888888 !important; }
+}
