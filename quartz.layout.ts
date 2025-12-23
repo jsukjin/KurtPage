@@ -38,7 +38,11 @@ export const defaultContentPageLayout: PageLayout = {
         { Component: Component.ReaderMode() },
       ],
     }),
-    Component.Explorer(),
+    Component.Explorer({
+  folderClickBehavior: "collapse", // what happens when you click a folder ("link" to navigate to folder page on click or "collapse" to collapse folder on click)
+  folderDefaultState: "collapsed", 
+  useSavedState: false, // 👈 테스트를 위해 잠시 false로 설정 (캐시된 상태 무시)
+}),
   ],
   right: [
     Component.Graph(),
@@ -64,8 +68,9 @@ export const defaultListPageLayout: PageLayout = {
     }),
     // 👇 Explorer 컴포넌트를 다음과 같이 수정하세요
     Component.Explorer({
-      folderDefaultState: "open", // 기본적으로 폴더를 열어둠
-      folderClickBehavior: "toggle", // 클릭 시 여닫기 동작
+     folderClickBehavior: "collapse", // what happens when you click a folder ("link" to navigate to folder page on click or "collapse" to collapse folder on click)
+     folderDefaultState: "collapsed", 
+	 useSavedState: false,
     }),
   ],
   right: [],
