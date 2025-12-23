@@ -39,6 +39,11 @@ export const defaultContentPageLayout: PageLayout = {
       ],
     }),
     Component.Explorer(),
+	// 리스트 페이지(폴더 등)에서도 보고 싶다면 여기에도 추가
+    Component.DesktopOnly(Component.RecentNotes({ 
+      title: "Recent Notes", 
+      limit: 5 
+    })),
   ],
   right: [
     Component.Graph(),
@@ -62,7 +67,11 @@ export const defaultListPageLayout: PageLayout = {
         { Component: Component.Darkmode() },
       ],
     }),
-    Component.Explorer(),
+    // 👇 Explorer 컴포넌트를 다음과 같이 수정하세요
+    Component.Explorer({
+      folderDefaultState: "open", // 기본적으로 폴더를 열어둠
+      folderClickBehavior: "toggle", // 클릭 시 여닫기 동작
+    }),
   ],
   right: [],
 }
