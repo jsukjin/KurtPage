@@ -12,6 +12,24 @@ title: Kurt's Page
 
 ---
 
+```
+type FlexConfig = {
+  components: {
+    Component: QuartzComponent
+    grow?: boolean // whether component should grow to fill space
+    shrink?: boolean // whether component should shrink if needed
+    basis?: string // initial main size of the component
+    order?: number // order in flex container
+    align?: "start" | "end" | "center" | "stretch" // cross-axis alignment
+    justify?: "start" | "end" | "center" | "between" | "around" // main-axis alignment
+  }[]
+  direction?: "row" | "row-reverse" | "column" | "column-reverse"
+  wrap?: "nowrap" | "wrap" | "wrap-reverse"
+  gap?: string
+}
+```
+
+
 # 1. Audio
 
 ## 1. Unreal

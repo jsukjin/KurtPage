@@ -9,30 +9,11 @@ tags:
 draft: "False"
 ---
 
-> [!info]  요약
-> 요약 내용
-
----
-<span style="color:rgb(146, 208, 80)"><b>Table of Contents</b></span>
-
-- [1. InGame](#1-ingame)
-	- [1. 3D Audio Debug](#1-3d-audio-debug)
-	- [2. Listener Debug](#2-listener-debug)
-	- [3. 3D Active sounds Debug](#3-3d-active-sounds-debug)
-	- [4. Active Sounds Debug](#4-active-sounds-debug)
-	- [5. Active Sounds Debug (log)](#5-active-sounds-debug-log)
-- [2. Mix](#2-mix)
-	- [1. SoundModulation](#1-soundmodulation)
-- [3. Profiling](#3-profiling)
-- [4. Links](#4-links)
-
----
-
->[!Info] 요약
+>[!Info] Summary
 >자주쓰는 UE Audio debug Command 정리
 
 ---
-<span style="color:rgb(146, 208, 80)"><b>Table Of Contents</b></span>
+<font color="#9fffa3">Table of Contents</font>
 
 - [1. InGame](#1-ingame)
 	- [1. 3D Audio Debug](#1-3d-audio-debug)
@@ -61,7 +42,7 @@ World에 Listener Transform 표시
 ``` cpp fold title:Cmd
 au.3dVisualize.Listeners 1
 ```
-- **au.3dVisualize.Enabled 1** 이후 사용 필요
+- <font color="#ffb15b"> au.3dVisualize.Enabled 1</font> 이후 사용 필요
 
 ---
 ## 3. 3D Active sounds Debug
