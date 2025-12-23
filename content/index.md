@@ -1,5 +1,5 @@
 ---
-title: Welcome to Quartz
+title: Kurt's Page
 ---
 
 This is a blank Quartz installation.
