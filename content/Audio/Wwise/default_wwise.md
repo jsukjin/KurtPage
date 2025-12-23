@@ -11,7 +11,8 @@ draft: "False"
 > 요약 내용
 
 ---
-<span style="color:rgb(146, 208, 80)"><b>Table of Contents</b></span>
+
+<font color="#9fffa3">Table of Contents</font>
 
 - [제목1](#%EC%A0%9C%EB%AA%A91)
 	- [제목2](#%EC%A0%9C%EB%AA%A92)

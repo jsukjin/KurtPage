@@ -68,3 +68,36 @@
   background-color: rgba(136, 136, 136, 0.1) !important;
   .callout-title, .callout-icon { color: #888888 !important; }
 }
+
+
+// 1. 다크 모드와 라이트 모드 공통: 인라인 스타일 색상 강제 적용
+// 선택자를 상세하게 적을수록(body .dark ...) 우선순위가 올라갑니다.
+body.dark span[style*="color"], 
+body span[style*="color"] {
+  color: inherit !important;
+}
+
+// 2. 색상별 다크 모드 최적화 (!important로 테마의 강제 색상을 무력화)
+body.dark {
+  span[style*="rgb"] {
+    color: inherit !important;
+
+    // 연두색 (다크 모드에서 너무 눈 아프면 색상값을 살짝 조절 가능)
+    &[style*="146, 208, 80"] { color: rgb(146, 208, 80) !important; }
+    // 빨간색
+    &[style*="255, 0, 0"] { color: rgb(255, 0, 0) !important; }
+    // 노란색
+    &[style*="255, 192, 0"] { color: rgb(255, 192, 0) !important; }
+    // 파란색
+    &[style*="0, 176, 240"] { color: rgb(0, 176, 240) !important; }
+    // 보라색
+    &[style*="112, 48, 160"] { color: rgb(112, 48, 160) !important; }
+  }
+
+  // 다크 모드에서의 강조(mark) 설정
+  mark {
+    background-color: var(--highlight-color, rgba(146, 208, 80, 0.3)) !important;
+    color: #ffffff !important; // 다크모드 강조 글씨는 흰색이 잘 보입니다
+    border-bottom: 2px solid rgba(146, 208, 80, 0.8);
+  }
+}
