@@ -4,31 +4,19 @@ author: KurtJang
 tags:
   - "#Books"
 date: <% tp.date.now("YYYY-MM-DD")%>
-coverURL:
+draft: "False"
 ---
 
 > [!NOTE] 
 > 요약
 
+---
+<font color="#68ff6e">Table of Contents</font>
+
+- [Code Example](#code-example)
+- [Callout Example](#callout-example)
 
 ---
-# Table of Contents
-
-```table-of-contents
-title: 
-style: nestedList # TOC style (nestedList|nestedOrderedList|inlineFirstLevel)
-minLevel: 0 # Include headings from the specified level
-maxLevel: 0 # Include headings up to the specified level
-include: 
-exclude: 
-includeLinks: true # Make headings clickable
-hideWhenEmpty: false # Hide TOC if no headings are found
-debugInConsole: false # Print debug info in Obsidian console
-```
-
-
----
-
 
 # Code Example
 ``` cpp fold title:Cmd
