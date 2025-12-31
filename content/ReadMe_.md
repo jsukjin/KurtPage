@@ -1,11 +1,22 @@
 ---
 title: ReadMe
 author: KurtJang
-date: 2025-12-31
 tags:
-  - "#Blog"
-draft: "True"
+  - "#Books"
+date: 2025-12-31
+draft: "true"
 ---
+
+> [!NOTE] 
+> 요약
+
+---
+<font color="#92d050">Table Of Contents</font>
+
+- [Table of Contents](#table-of-contents)
+- [ETC](#etc)
+	- [Installed plugin list](#installed-plugin-list)
+
 ---
 # ETC
 ## Installed plugin list
@@ -19,8 +30,5 @@ draft: "True"
 - Table of Contents
 - Automatic Table of Contents
 - Code Styler
-
-
----
 
 ---
