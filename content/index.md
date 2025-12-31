@@ -1,26 +1,28 @@
 ---
-title: Kurt's Page
+title: Main
+author: KurtJang
+tags:
+  - "#Blog"
+date: 2025-12-01
+draft: "False"
 ---
-
-Kurt's Blog
+---
+Thank you for vising my blog. <br>
+This is a space where I archive and share my learning
 
 ---
-# 1. Audio
+# UE
 
-## 1. Unreal
-
-#UEAudio 
+#UE #UEAudio 
 
 
-## 2. Wwise
+# Wwise
 
 #Wwise
 
----
 
 
-
-
+----
 
 
 
