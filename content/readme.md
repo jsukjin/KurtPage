@@ -1,15 +1,12 @@
 ---
 title: ReadMe
 author: KurtJang
-date: 2025-12-23
+date: 2025-12-31
 tags:
   - "#Blog"
-draft: "False"
+draft: "True"
 ---
 ---
-
-
-
 # ETC
 ## Installed plugin list
 
