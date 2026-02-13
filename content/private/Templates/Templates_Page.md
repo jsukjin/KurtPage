@@ -2,7 +2,7 @@
 title: <% tp.file.title %>
 author: KurtJang
 tags:
-  - "#Books"
+  - Blog
 date: <% tp.date.now("YYYY-MM-DD")%>
 draft: "False"
 ---
