@@ -30,14 +30,17 @@ draft: "False"
 
 1. https://cloud.google.com/
 2. Console 클릭
-![[n8n_cloud_GoogleCloud.png|500]]
+
+![[n8n_cloud_GoogleCloud.png|450]]
 
 3. 'My Project' 클릭해서 project 생성 (1번)
 4. Virtual machine 생성 (2번)
-![[n8n_cloud_setup_01.png|500]]
+
+![[n8n_cloud_setup_01.png|450]]
 
 5. "Compute Engine API" 에서 Enable 클릭
-![[n8n_cloud_setup_02.png|500]]
+
+![[n8n_cloud_setup_02.png|450]]
 
 ---
 ## B. Configuration
@@ -51,19 +54,20 @@ Free Tier 조건에 맞추기 위하여 다음과 같이 설정한다
 - **Zone : Any**
 - **Series : E2**
 
-![[n8n_cloud_machine_configuration.png|400]]
+![[n8n_cloud_machine_configuration.png|450]]
 
 ### OS and Storage
 
 - **Operation System : Ubuntu**
 - **HDD : 30 GB**
+
 ![[n8n_cloud_setup_OsAndStorage.png|450]]
 
 ### Networking
 
-- Allow HTTP traffic - allow
-- Allow HTTPS traffic - allow
-- Allow Load Balancer Health Checks - allow
+- Allow HTTP traffic - tick
+- Allow HTTPS traffic - tick
+- Allow Load Balancer Health Checks - tick
 
 ![[n8n_cloud_setup_Networking.png|450]]
 
@@ -72,10 +76,10 @@ Free Tier 조건에 맞추기 위하여 다음과 같이 설정한다
 	- http 접속을 가능하게 하기 위하여 rule 생성
 	- 추후에는 https로 접속 가능해지면 제거
 
-![[n8n_cloud_setup_NetworkDetails.png|500]]
+![[n8n_cloud_setup_NetworkDetails.png|450]]
 - view network details / 네트워크 세부정보 보기 클릭
 
-![[n8n_cloud_setup_CreateVPCFireWall.png|500]]
+![[n8n_cloud_setup_CreateVPCFireWall.png|450]]
 - 'Create VPC firewall rule' 클릭
 
 ![[n8n_cloud_setup_FireWallSetup_Detail.png|450]]
@@ -90,6 +94,7 @@ Free Tier 조건에 맞추기 위하여 다음과 같이 설정한다
 
 1. SSH 접속
 - open in broswer window 또는 SSH 클릭
+
 ![[n8n_cloud_setup_SSH.png|500]]
 
 2. Docker 설치
@@ -105,6 +110,7 @@ Free Tier 조건에 맞추기 위하여 다음과 같이 설정한다
 
 모든 설치가 진행되고 실행하면 다음과 같은 에러 메세지가 나오는데
 이는 'http'를 활용하기 때문에 발생되는 문제이다
+
 ![[n8n_cloud_setup_HTTPError.png|400]]
 
 - Seure 옵션을 강제로 false 함으로써 http에서 로딩이 가능하다 (아래 cmd 실행)
