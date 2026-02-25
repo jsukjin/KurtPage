@@ -1,5 +1,5 @@
 ---
-title: n8n setup guide (google-cloud)
+title: n8n setup (cloud)
 author: KurtJang
 tags:
   - Blog

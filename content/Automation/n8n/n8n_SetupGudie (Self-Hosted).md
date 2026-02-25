@@ -1,5 +1,5 @@
 ---
-title: n8n setup guide (self-hosted)
+title: n8n setup (self-hosted)
 author: KurtJang
 tags:
   - "#Blog"
