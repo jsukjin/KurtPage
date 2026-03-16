@@ -36,9 +36,9 @@ draft: "False"
 ## 1.1 Docker setup
 
 - 링크를 참고하여 docker setup
-
+	- how to set up n8n (self-hosted) - [링크](https://jsukjin.github.io/Automation/n8n/n8n_SetupGudie-(Self-Hosted))
+ 
 ---
-
 # 2. Docker setup
 
 ## 1. Dockerfile
