@@ -2,7 +2,7 @@
 title: New Wwise Page
 author: KurtJang
 tags:
-  - "#Books"
+  - Blog
 date: 2025-12-31
 draft: "true"
 ---

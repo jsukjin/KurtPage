@@ -3,6 +3,7 @@ title: n8n setup (self-hosted)
 author: KurtJang
 tags:
   - "#Blog"
+  - n8n
 date: 2026-01-02
 draft: "False"
 ---

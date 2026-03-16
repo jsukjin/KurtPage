@@ -3,25 +3,29 @@ title: how to run python in docker
 author: KurtJang
 tags:
   - Blog
+  - Python
+  - n8n
 date: 2026-02-24
 draft: "False"
 ---
----
-
 
 > [!info]  요약
-> python을 docker에 container로 올리고 이를 n8n에서 http request로 실행
+> python을 docker에 올리고 이를 n8n(self-hosted) 에서 Http request로 실행하는 방법
+> 
 
 ---
 <font color="#68ff6e">Table of Contents</font>
 
-- [1. Docker](#1-docker)
-- [2. Python](#2-python)
-- [3. n8n](#3-n8n)
+1. [1. Docker setup](#1.%20Docker%20setup)
+	1. [DockerFile](#DockerFile)
+	2. [docker-compose.yml](#docker-compose.yml)
+2. [2. Python setup](#2.%20Python%20setup)
+	1. [main.py](#main.py)
+	2. [test.py](#test.py)
+3. [3. Test](#3.%20Test)
 
 ---
-
-# 1. Docker 
+# 1. Docker setup
 
 ## DockerFile
 
@@ -92,7 +96,7 @@ networks:
 
 ---
 
-# 2. Python
+# 2. Python setup
 
 ## main.py
 
@@ -195,9 +199,7 @@ def user_info_handler(item) -> dict:
 
 ---
 
-# 3. n8n
-
-![[docker_python_n8n.png|700]]
+# 3. Test
 
 - HTTP Request 호출
 	- URL의 경우 docker-compose에서 services에서 이름 확인
@@ -205,8 +207,10 @@ def user_info_handler(item) -> dict:
 		- http://python-api:8000 : docker-compose 에서 적용된 service 이름/포트 적용
 		- user-register : main.py에서 @aspp.post로 지정한 부분 적용
 
-예 : docker-compose.yml 예제
 
+![[docker_python_n8n.png|700]]
+
+예 : docker-compose.yml 예제
 ```
 
 services:
@@ -222,17 +226,7 @@ services:
 
 ```
 
-- body parameter에 알맞은 파라미터를 작성해서 보내면 python으로 실행된 결과물을 
-  output으로 받을 수 있다
-
----
-
-# 4. Conclusion
-
-python을 docker에 image로 제작하여 n8n에서 쉽고 원하게 호출 할 수 있게 된다
-n8n 자동화에서 python 특화된 작업들을 위와 같은 방식으로 
-n8n work-flow 에 간편히\ 적용할 수 있게 된다
-
-
+- body parameter에 알맞은 파라미터를 작성해서 보내면 
+  python으로  실행된 결과물을  output으로 받을 수 있다
 ---
 
