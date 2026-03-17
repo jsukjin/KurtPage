@@ -35,15 +35,20 @@ draft: "False"
 2.  create 실행
 	- Execution envrionment
 		- Default로 설정
+
 ![[CloudRun_Setup_01.png|500]]
 
+
 3. Enable required APIs
-- 설정을 진행하다 보면 require API를 모두 enable 한다`
+- 설정을 진행하다 보면 require API를 모두 enable 한다
+`
 ![[CloudRun_Enable_CloudBuildAPI.png|300]]
 ![[CloudRun_Enable_Required API.png|300]]
 
-3. Result  ^CloudUrl
+
+4. Result  ^CloudUrl
 - 등록이 완료되고 나면 URL 에 해당 코드를 실행할 수 있는 주소를 부여한다
+
 ![[ColudRun_Result.png]]
 
 

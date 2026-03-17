@@ -208,7 +208,7 @@ def user_info_handler(item) -> dict:
 		- user-register : main.py에서 @aspp.post로 지정한 부분 적용
 
 
-![[docker_python_n8n.png|700]]
+![[docker_python_n8n.png|500]]
 
 예 : docker-compose.yml 예제
 ```
