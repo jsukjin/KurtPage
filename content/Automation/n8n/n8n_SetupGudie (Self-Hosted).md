@@ -62,13 +62,13 @@ choco install ngrok
 2. token 발급 및 적용
 	- https://dashboard.ngrok.com/get-started/your-authtoken
 
-![[n8n_ngrok_token.png|450]]
+![[n8n_ngrok_token.webp|450]]
 
 ## 3. env 파일 설정
 
 1. env.exmaple -> env로 이름을 수정하고 안에 id/pw 수정해준다
 
-![[n8n_내부.png|450]]
+![[n8n_내부.webp|450]]
 
 
 ---
@@ -87,21 +87,21 @@ choco install ngrok
 
 x-n8n
 
-![[n8n_setup_kn8n.png|400]]
+![[n8n_setup_kn8n.webp|400]]
 
 services
 
-![[n8n_setup_services.png|400]]
+![[n8n_setup_services.webp|400]]
 
 n8n-import
 
-![[n8n_setup_n8nimport.png|400]]
+![[n8n_setup_n8nimport.webp|400]]
 
 ## 2. env 파일 수정
 - ngrok에서 받은 주소를 넣어준다 
 - 파일 : .evn 파일
 
-![[n8n_setup_subdomain.png|450]]
+![[n8n_setup_subdomain.webp|450]]
 
 ---
 # 5. n8n 실행
@@ -121,13 +121,13 @@ ngrok http 5678
 ---
 # 6. 결과
 
-![[n8n_setup_login.png|400]]
+![[n8n_setup_login.webp|400]]
 
 - ngrok에서 제공하는 주소를 통해 n8n에 접속이 가능하다
+- 이후 actvation 진행
+	- Settings -> Usage and plan
 
 
-![[n8n_actvation.png|400]]
-- 이후 settings에서 activation을 진행
 
 ---
 # 6. docker cmd

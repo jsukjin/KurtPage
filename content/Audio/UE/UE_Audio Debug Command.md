@@ -53,7 +53,7 @@ au.3dVisualize.ActiveSounds 1
 ```
 - 0: Disable, 1: Volume (Lin), 2: Volume (dB), 3: Distance, 4: Random color
 
-![[UE_AudioDebug_3D_ActiveSounds.png|300]]
+![[UE_AudioDebug_3D_ActiveSounds.webp|300]]
 
 ## 4. Active Sounds Debug 
 
@@ -62,7 +62,7 @@ au.3dVisualize.ActiveSounds 1
 au.Debug.Sounds 1
 ```
 
-![[UE_AudioDebug_ActiveSounds.png|500]]
+![[UE_AudioDebug_ActiveSounds.webp|500]]
 
 ## 5. Active Sounds Debug (log)
 
@@ -71,7 +71,7 @@ au.Debug.Sounds 1
 au.Debug.Sounds 1
 ```
 
-![[UE_AudioDebug_ActiveSounds_Log.png]]
+![[UE_AudioDebug_ActiveSounds_Log.webp]]
 
 ---
 # 2. Mix
@@ -89,7 +89,7 @@ au.Debug.Modulation.Filter.Buses [BUS_NAME]
 ```
 - eg : au.Debug.Modulation.Filter.Buses CB_Music
 
-![[UE_AudioDebug_Mix_ModulationMatrix.png]]
+![[UE_AudioDebug_Mix_ModulationMatrix.webp]]
 
 ---
 # 3. Profiling
@@ -101,9 +101,9 @@ au.Debug.AduioMemReport
 - 아래 사진과 같이 saved/profiling 경로 안에 로그 파일 생성
 
 사진 : 로그 메세지
-![[UE_AudioDebug_Profiling_Log.png]]
+![[UE_AudioDebug_Profiling_Log.webp]]
 
-![[UE_AudioDebug_ActiveSoundLists.png]]
+![[UE_AudioDebug_ActiveSoundLists.webp]]
 - 이와 같이 로그 파일을 통해 active 되었었던 모든 사운드를 확인할 수 있다
 
 Audio cache overflow시 report에 에러 송출

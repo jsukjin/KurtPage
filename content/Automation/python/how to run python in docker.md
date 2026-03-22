@@ -31,7 +31,7 @@ draft: "False"
 
 - docker image를 생성을 위한 config
 
-![[docker_python_DockerFile.png|700]]
+![[docker_python_DockerFile.webp|700]]
 
 **예제 코드**
 ```
@@ -61,7 +61,7 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 - docker 내의 container 를 정의하고 실행하기  config
 
-![[docker_python_docker-compose.png|700]]
+![[docker_python_docker-compose.webp|700]]
 
 **예제 코드**
 ```
@@ -100,7 +100,7 @@ networks:
 
 ## main.py
 
-![[docker_python_main.py.png|700]]
+![[docker_python_main.py.webp|700]]
 
 - FAST API를 활용하여 get/post 를 설정하고 그에 맞는 함수를 호출
 - 함수는 별도의 python 파일로 관리하여 모듈성 강화
@@ -149,7 +149,7 @@ def register_user(item: UserItem):
 
 ## test.py
 
-![[docker_python_test.py.png|700]]
+![[docker_python_test.py.webp|700]]
 - Test.py 에는 함수의 구현부가 들어가 있다
 - main.py 가 일종의 header / test.py가 cpp 역할을 하게 된다
 
@@ -208,7 +208,7 @@ def user_info_handler(item) -> dict:
 		- user-register : main.py에서 @aspp.post로 지정한 부분 적용
 
 
-![[docker_python_n8n.png|500]]
+![[docker_python_n8n.webp|500]]
 
 예 : docker-compose.yml 예제
 ```

@@ -29,27 +29,27 @@ draft: "False"
 
 1. Colud Run 클릭 (검색창에서 clolud run 검색)
 
-![[CloudRun_Search_CloudRun.png|500]]
+![[CloudRun_Search_CloudRun.webp|500]]
 
 
 2.  create 실행
 	- Execution envrionment
 		- Default로 설정
 
-![[CloudRun_Setup_01.png|500]]
+![[CloudRun_Setup_01.webp|500]]
 
 
 3. Enable required APIs
 - 설정을 진행하다 보면 require API를 모두 enable 한다
 `
-![[CloudRun_Enable_CloudBuildAPI.png|300]]
-![[CloudRun_Enable_Required API.png|300]]
+![[CloudRun_Enable_CloudBuildAPI.webp|300]]
+![[CloudRun_Enable_Required API.webp|300]]
 
 
 4. Result  ^CloudUrl
 - 등록이 완료되고 나면 URL 에 해당 코드를 실행할 수 있는 주소를 부여한다
 
-![[ColudRun_Result.png]]
+![[ColudRun_Result.webp]]
 
 
 ---
@@ -105,7 +105,7 @@ def hello_http(request):
 - n8n에 credential 설정으로 사전에 저장해두고 활용 가능
 
 사진 : Header Auth 
-![[CloudRun_HeaderAuth_Example.png|700]]
+![[CloudRun_HeaderAuth_Example.webp|700]]
 
 ---
 

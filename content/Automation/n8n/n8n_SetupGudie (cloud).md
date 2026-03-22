@@ -34,16 +34,16 @@ draft: "False"
 1. https://cloud.google.com/
 2. Console 클릭
 
-![[n8n_cloud_GoogleCloud.png|450]]
+![[n8n_cloud_GoogleCloud.webp|450]]
 
 3. 'My Project' 클릭해서 project 생성 (1번)
 4. Virtual machine 생성 (2번)
 
-![[n8n_cloud_setup_01.png|450]]
+![[n8n_cloud_setup_01.webp|450]]
 
 5. "Compute Engine API" 에서 Enable 클릭
 
-![[n8n_cloud_setup_02.png|450]]
+![[n8n_cloud_setup_02.webp|450]]
 
 ---
 ## B. Configuration
@@ -57,14 +57,14 @@ Free Tier 조건에 맞추기 위하여 다음과 같이 설정한다
 - **Zone : Any**
 - **Series : E2**
 
-![[n8n_cloud_machine_configuration.png|450]]
+![[n8n_cloud_machine_configuration.webp|450]]
 
 ### OS and Storage
 
 - **Operation System : Ubuntu**
 - **HDD : 30 GB**
 
-![[n8n_cloud_setup_OsAndStorage.png|450]]
+![[n8n_cloud_setup_OsAndStorage.webp|450]]
 
 ### Networking
 
@@ -72,20 +72,20 @@ Free Tier 조건에 맞추기 위하여 다음과 같이 설정한다
 - Allow HTTPS traffic - tick
 - Allow Load Balancer Health Checks - tick
 
-![[n8n_cloud_setup_Networking.png|450]]
+![[n8n_cloud_setup_Networking.webp|450]]
 
 ### FireWall
 1. Firewall rule 생성
 	- http 접속을 가능하게 하기 위하여 rule 생성
 	- 추후에는 https로 접속 가능해지면 제거
 
-![[n8n_cloud_setup_NetworkDetails.png|450]]
+![[n8n_cloud_setup_NetworkDetails.webp|450]]
 - view network details / 네트워크 세부정보 보기 클릭
 
-![[n8n_cloud_setup_CreateVPCFireWall.png|450]]
+![[n8n_cloud_setup_CreateVPCFireWall.webp|450]]
 - 'Create VPC firewall rule' 클릭
 
-![[n8n_cloud_setup_FireWallSetup_Detail.png|450]]
+![[n8n_cloud_setup_FireWallSetup_Detail.webp|450]]
 - **Source ranges : 0.0.0.0/0**
 - **Speicifed protocols and ports**
 	- **TCP  :allow**
@@ -98,7 +98,7 @@ Free Tier 조건에 맞추기 위하여 다음과 같이 설정한다
 1. SSH 접속
 - open in broswer window 또는 SSH 클릭
 
-![[n8n_cloud_setup_SSH.png|500]]
+![[n8n_cloud_setup_SSH.webp|500]]
 
 2. 폴더 생성/권한
 ```
@@ -172,12 +172,15 @@ nohup ngrok http --domain=YOUR_NGROK_DOMAIN 5678 > /dev/null 2>&1 &
 # 4. Result
 - setup owner가 뜨며 성공됨을 알 수 있다
 
-![[n8n_setup_login.png|300]]
+![[n8n_setup_login.webp|300]]
 
 
 ```
 # docker에 n8n 실행
 docker compose up -d
+
+# docker에 n8n 실행 (리빌드이후)
+docker compose up --build -d
 
 # ngrok 설정
 nohup ngrok http --domain=YOUR_NGROK_DOMAIN 5678 > /dev/null 2>&1 &
