@@ -156,9 +156,8 @@ a {
 }
 
 .page {
-  max-width: 100vw;
-  width: 100%;
-  margin: 0;
+  max-width: calc(#{map.get($breakpoints, desktop)} + 300px);
+  margin: 0 auto;
   & article {
     & > h1 {
       font-size: 2rem;
@@ -193,12 +192,8 @@ a {
     row-gap: #{map.get($desktopGrid, rowGap)};
     grid-template-areas: #{map.get($desktopGrid, templateAreas)};
 
-    @media all and ($desktop) {
-      grid-template-columns: 1fr minmax(0, 60vw) 1fr;
-    }
-
     @media all and ($tablet) {
-      grid-template-columns: clamp(160px, 20vw, 260px) auto;
+      grid-template-columns: #{map.get($tabletGrid, templateColumns)};
       grid-template-rows: #{map.get($tabletGrid, templateRows)};
       column-gap: #{map.get($tabletGrid, columnGap)};
       row-gap: #{map.get($tabletGrid, rowGap)};
@@ -223,20 +218,16 @@ a {
       gap: 1.2rem;
       top: 0;
       box-sizing: border-box;
-      padding: $topSpacing 1.5rem 2rem 1.5rem;
+      padding: $topSpacing 2rem 2rem 2rem;
       display: flex;
       height: 100vh;
       position: sticky;
-      overflow-y: auto;
-      overflow-x: hidden;
     }
 
     & .sidebar.left {
       z-index: 1;
       grid-area: grid-sidebar-left;
       flex-direction: column;
-      align-items: stretch;
-      width: 100%;
       @media all and ($mobile) {
         gap: 0;
         align-items: center;
@@ -253,8 +244,6 @@ a {
       grid-area: grid-sidebar-right;
       margin-right: 0;
       flex-direction: column;
-      align-items: stretch;
-      width: 100%;
       @media all and ($mobile) {
         margin-left: inherit;
         margin-right: inherit;
