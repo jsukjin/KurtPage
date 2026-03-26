@@ -166,7 +166,7 @@ curl -X POST http://localhost:5000/post \
      -d '{"name": "Kurt", "status": "success"}'
 ```
 
-## 6. docker cmd
+## 6. cmd
 
 ```
 # 기존의 docker를 내려준다
@@ -177,6 +177,12 @@ docker compose up -d
 
 # 만약 python 코드가 변경되어 re-build 해야할 경우
 docker compose up --build -d
+
+# ngrok 기존연결 삭제
+pkill ngrok
+
+# ngrok 연결
+nohup ngrok http --domain=[MY_NGROK_ADDRESS] 5678 > ngrok.log 2>&1 &
 ```
 
 
