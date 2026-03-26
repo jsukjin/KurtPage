@@ -3464,8 +3464,8 @@ body {
       padding: 0;
       margin: 0;
       div#quartz-body {
-        width: min(100%, calc(#{map.get($breakpoints, desktop)} + 300px));
-        max-width: min(100%, calc(#{map.get($breakpoints, desktop)} + 300px));
+        width: 100%;
+        max-width: 100%;
         padding: 0 auto;
       }
     }
