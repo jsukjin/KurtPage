@@ -4,7 +4,7 @@ author: KurtJang
 date: 2025-12-23
 tags:
   - "#Blog"
-draft: "False"
+draft: "false"
 ---
 
 > [!info]  요약
@@ -24,6 +24,8 @@ draft: "False"
 
 ## 제목2
 
+
+이상해서 확인중에 있습니다.
 
 # Code Example
 ``` cpp fold title:Cmd
