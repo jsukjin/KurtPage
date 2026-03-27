@@ -2,6 +2,12 @@
 @use "./themes";
 
 // put your custom CSS here!
+
+// 이미지가 본문 영역 밖으로 삐져나오지 않게
+article img {
+  max-width: 100% !important;
+  height: auto !important;
+}
 /* quartz/styles/custom.scss */
 
 // 1. 모든 콜아웃 공통 스타일
