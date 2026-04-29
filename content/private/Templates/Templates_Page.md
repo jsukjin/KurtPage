@@ -13,6 +13,8 @@ draft: "False"
 ---
 <font color="#68ff6e">Table of Contents</font>
 
+%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
+
 - [Code Example](#code-example)
 - [Callout Example](#callout-example)
 
@@ -31,6 +33,8 @@ draft: "False"
   </div>
 </details>
 
+
+%% 옵시디언에서만 보이는 주석 %%
 
 
 # Code Example
