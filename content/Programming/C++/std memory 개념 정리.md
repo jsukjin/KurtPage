@@ -16,19 +16,16 @@ draft: "False"
 ---
 <font color="#b3f594"><strong>Table of Contents</strong></font>
 
-- [Code Example](#code-example)
-- [Callout Example](#callout-example)
-
 - [1. pointer_traits](#1-pointer_traits)
-	- [1. 개념 설명](#1-%EA%B0%9C%EB%85%90-%EC%84%A4%EB%AA%85)
+	- [1. 구성 요소](#1-%EA%B5%AC%EC%84%B1-%EC%9A%94%EC%86%8C)
 	- [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-	- [3. 실제 예제](#3-%EC%8B%A4%EC%A0%9C-%EC%98%88%EC%A0%9C)
+	- [3. 실제 코드](#3-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
 - [2. allocator](#2-allocator)
-
-
+	- [1. 구성 요소](#1-%EA%B5%AC%EC%84%B1-%EC%9A%94%EC%86%8C)
+	- [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
+	- [3. 실제 코드](#3-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
 
 ---
-
 # 1. pointer_traits
 
 포인터 타입들(raw/smatrt pointer)에 대해 공통된 인터페이스 제공하는 유틸리티 템플릿
@@ -226,5 +223,4 @@ public:
 
 ```
 
-
-
+---
