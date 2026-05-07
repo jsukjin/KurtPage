@@ -181,8 +181,131 @@ deleter(const deleter<U>&)
 ```
 
 ---
+# 3. extent
+
+-  <font color="#b3f594">핵심 정의 </font> : 타입 `T` 가 배열일때, 지정한 차원의 요소 개수를 상수로 반환
+-  <font color="#b3f594">작동 원리 </font> :`int[10]` 이라면 `10` 을 `int[10][20]` 에서 1번째 차원을 물으면 `20` 반환
+-  <font color="#b3f594">차원 지정 </font> : 두번째 템플릿 인자로 숫자를 넘겨 몇번째 대괄호의 크기를 잴지 결정한다
+-  <font color="#b3f594">중요 포인트</font> : 배열이 아니거나, 크기가 명시되지 않은 배열은 
+               해당 차원의 크기를 물으면 `0 ` 반환
+
+## 1. 파라미터
+
+- `T` : 검사할 타입
+- `N` : 몇번째 차원 (기본값 0 = 첫번째 차원)
+- `::value` : 해당 차원의 크기 반환 (크기를 알수 없으면 0)
 
 
+## 2. 예제 코드
+
+``` cpp
+
+std::extent<int[4]>::value;        //4
+std::extent<int[4][3]>::value;     //4 (첫번째 차원)
+std::extent<int[4][3],1>::value;   //3 (두번째 차원)
+
+std::extent<int[]>::value;         //0 
+std::extent<int>::vlaue;           //0 (배열 아님)
+```
+
+
+## 3. 실제 코드
+``` cpp
+
+template <typename T>
+typename std::enable_if<std::is_array<T>::value &&
+						std::extent<T>::value == 0, //here
+						ipl::unique_ptr<T>::type
+make_unique(size_t size)
+{
+
+}
+
+// 왜 extent == 0을 체크할까요?
+
+//크기 미지정 배열[] 은 0 이므로 make_unique가 가능
+ipl::make_unique<float[]>(4);
+
+// 크기 지정배열 float[4] 는 4이므로 make_uniuqe 막음
+ipl::make_unique<float>[4]();
+```
+
+---
+
+# 4. remove_extent
+
+- 배열 타입에서 배열 껍데기를 벗겨내는 도구'
+
+``` cpp
+float[] -> float
+int[4] -> int
+float -> float (배열 아니면 그대로)
+```
+
+
+# 1. 구성 요소
+- `T` : 변환할 타입
+- `::type` : 배열 껍데기 벗긴 결과 타입
+
+``` cpp
+float[][] -> float[] // 한번만 벗김
+float[] -> float     // 두번 벗김
+```
+
+## 2. 예제 코드
+
+``` cpp
+
+std::remove_extent<float[]>::type     //float
+std::remove_extent<float[4]>::type    //float
+std::remove_extent<float>[][]>::type  //float[] (한번만 벗김)
+std::remove_extent<float>::type       //float 그대로
+std::remove_extent<int[4]>::type      // int
+
+```
+
+## 3. 실제 코드
+
+``` cpp
+
+template <typename T>
+make_unique(size_t size)
+{
+	//float[] -> float 으로 벗겨냄 (E = float)
+	typedef typename std::remove_extent<T>::type E;	
+	
+	// E = float로 메모리 계산
+	auto p = reinterpret_cast<E*>(gMemory().allocate (size * sizeof(E), ...));	
+	
+	//각 원소 생성
+	for (auto i = 0; i < size; ++i)
+	{
+		/* (&p[i])는 배열의 시작 주소 
+		*  *&p[0], &p[1] 등
+		  
+		  new (주소) 타입(인자)
+		  float* p = reinterpret_cast<float*>(gMemory().allocate(...));
+		
+		  //생성자만 호출
+		  new (p) float(1.0f);
+		*/
+		
+		new (&p[i]) E(); //new float()
+	}
+	
+	return ipl::unique_ptr<T>(p, deleter<T>(size));
+}
+
+```
+
+
+
+
+
+\
+
+
+---
 
 들여쓰기
 
