@@ -72,7 +72,7 @@ draft: "false"
 <div style="display:flex; justify-content:center; margin-top:12px;">
   <iframe 
     src="/static/floodfill_interactive.html" 
-    width="90%" 
+    width="100%" 
     height="750"
     style="border:none; border-radius:8px;"
   ></iframe>
@@ -85,6 +85,25 @@ draft: "false"
 
 ---
 
+<details style="border-left: 3px solid #4fc3f7; padding-left:16px; margin:16px 0;">
+<summary style="cursor:pointer; color:#4fc3f7; font-weight:bold;">
+  🔍 FloodFill 시각화 — 클릭해서 열기
+</summary>
+
+<div style="display:flex; justify-content:center; margin-top:12px;">
+  <iframe 
+    src="/static/floodfill_interactive.html" 
+    width="80%" 
+    height="750"
+    style="border:none; border-radius:8px;"
+  ></iframe>
+</div>
+
+</details>
+
+
+
+---
 # Code Example
 ``` cpp fold title:Cmd
 au.3dVisualize.Listeners 1

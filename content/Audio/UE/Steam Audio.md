@@ -32,7 +32,7 @@ draft: "true"
 </details>
 
 
-
+# 1. Setup
 
 
 https://valvesoftware.github.io/steam-audio/#learn-more
@@ -40,10 +40,16 @@ https://valvesoftware.github.io/steam-audio/downloads.html
 
 ![[Steam Audio-1774324570953.webp]]
 
+![[Steam Audio-1775555142550.webp]]
 
-![[Steam Audio-1774326155607.webp]]
 
-![[Steam Audio-1774326262767.webp]]
+![[Steam Audio-1775555220385.webp]]
+
+
+
+
+
+
 
 
 ---
