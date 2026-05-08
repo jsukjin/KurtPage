@@ -8,9 +8,10 @@ draft: "False"
 ---
 
 > [!NOTE] 
-> Stema Audio Array class 분석
+> Stema Audio Array class 분석 (core module)
 
 ---
+<br>
 <strong style="color:#b3f594">Table of Contents </strong>
 
 %% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
@@ -75,7 +76,7 @@ Array<T*, N-1> mPointers;
 //size(dim) 함수에서 사용
 size_t mSizes[N];
 ```
-
+<br>
 # 4. 함수별 분석
 ``` cpp
 
@@ -324,6 +325,7 @@ void swap(Array<T,1>& other)
 
 } //end of class Array<T,1>
 ```
+<br>
 
 # 5. 예제 코드
 
