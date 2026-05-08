@@ -23,6 +23,12 @@ draft: "False"
 
 ---
 
+<font color="#b3f594">1. 역할 분리</font>
+<font color="#b3f594">1. 역할 분리</font>
+<font color="#b3f594">1. 역할 분리</font>
+<font color="#b3f594">1. 역할 분리</font>
+
+
 들여쓰기
 
 <details>
