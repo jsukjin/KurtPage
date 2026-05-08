@@ -1,5 +1,5 @@
 ---
-title: "[Keywords] new"
+title: keywords_new
 author: KurtJang
 tags:
   - Blog
@@ -11,13 +11,15 @@ draft: "False"
 > operator new , new[] 에 대한 내용 정리
 
 ---
+<br>
 <strong><font color="#9fffa3">Table of Contents</font></strong>
 
 1. [new](#new)
-	1. [1. 구성요소](#1.%20%EA%B5%AC%EC%84%B1%EC%9A%94%EC%86%8C)
-	2. [2. 예제 코드](#2.%20%EC%98%88%EC%A0%9C%20%EC%BD%94%EB%93%9C)
-	3. [3. 실제 코드](#3.%20%EC%8B%A4%EC%A0%9C%20%EC%BD%94%EB%93%9C)
-	4. [4. 비교](#4.%20%EB%B9%84%EA%B5%90)
+	1. [1. 구성요소](#1-%EA%B5%AC%EC%84%B1%EC%9A%94%EC%86%8C)
+	2. [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
+	3. [3. 실제 코드](#3-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
+	4. [4. 비교](#4-%EB%B9%84%EA%B5%90)
+
 
 
 ---

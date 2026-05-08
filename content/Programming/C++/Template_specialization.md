@@ -14,12 +14,15 @@ draft: "False"
 > C++ Template 특수화 (Template specialization) / 부분특수화 (Partial Specialization) 개념 정리
 
 ---
+<br>
 <strong><font color="#9fffa3">Table of Contents</font></strong>
 
-1. [템플릿 특수화](#%ED%85%9C%ED%94%8C%EB%A6%BF%20%ED%8A%B9%EC%88%98%ED%99%94)
-	1. [1. 사용이유](#1.%20%EC%82%AC%EC%9A%A9%EC%9D%B4%EC%9C%A0)
-	2. [2. 예제 코드](#2.%20%EC%98%88%EC%A0%9C%20%EC%BD%94%EB%93%9C)
-	3. [2. 실제 코드](#2.%20%EC%8B%A4%EC%A0%9C%20%EC%BD%94%EB%93%9C)
+1. [템플릿 특수화](#%ED%85%9C%ED%94%8C%EB%A6%BF-%ED%8A%B9%EC%88%98%ED%99%94)
+	1. [1. 사용이유](#1-%EC%82%AC%EC%9A%A9%EC%9D%B4%EC%9C%A0)
+	2. [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
+	3. [2. 실제 코드](#2-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
+
+<br>
 
 %% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
 
@@ -54,7 +57,7 @@ strcut deleter
 > 부분 특수화 : 특정 패턴 (포인터, 배열 등) 다르게
 > <font color="#80dfff">우선 순위 : 완전 특수화 > 부분 특수화 > 일반 특수화</font>
 > 
-
+<br>
 
 ## 2. 예제 코드
 
@@ -129,6 +132,7 @@ p.printer(ptr);
 Printer<int[]> p;
 p.print(arr);
 ```
+<br>
 
 ## 2. 실제 코드
 

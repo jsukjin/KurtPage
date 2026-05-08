@@ -1,10 +1,11 @@
 ---
-title: how to run python in docker
+title: How to run Python in docker
 author: KurtJang
 tags:
   - Blog
   - Python
   - n8n
+  - "#Docker"
 date: 2026-02-24
 draft: "False"
 ---
@@ -14,15 +15,19 @@ draft: "False"
 > 
 
 ---
-<font color="#68ff6e">Table of Contents</font>
+<br>
+<strong><font color="#9fffa3">Table of Contents</font></strong>
 
-1. [1. Docker setup](#1.%20Docker%20setup)
-	1. [DockerFile](#DockerFile)
-	2. [docker-compose.yml](#docker-compose.yml)
-2. [2. Python setup](#2.%20Python%20setup)
-	1. [main.py](#main.py)
-	2. [test.py](#test.py)
-3. [3. Test](#3.%20Test)
+1. [1. Docker setup](#1-docker-setup)
+	1. [DockerFile](#dockerfile)
+	2. [docker-compose.yml](#docker-composeyml)
+2. [2. Python setup](#2-python-setup)
+	1. [main.py](#mainpy)
+	2. [test.py](#testpy)
+3. [3. Test](#3-test)
+
+
+<br>
 
 ---
 # 1. Docker setup
@@ -34,7 +39,7 @@ draft: "False"
 ![[docker_python_DockerFile.webp|700]]
 
 **예제 코드**
-```
+``` python
 # 1. 파이썬 경량 버전 사용
 FROM python:3.9-slim
 
@@ -64,7 +69,7 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ![[docker_python_docker-compose.webp|700]]
 
 **예제 코드**
-```
+``` python
 name: kurt-n8n  # folder Name
 
 services:
@@ -107,7 +112,7 @@ networks:
 
 
 **예제 코드**
-```
+``` python
 from fastapi import FastAPI
 from pydantic import BaseModel
 from test import test_post_handler, calculate_handler, user_info_handler
@@ -154,7 +159,7 @@ def register_user(item: UserItem):
 - main.py 가 일종의 header / test.py가 cpp 역할을 하게 된다
 
 **에제 코드**
-```
+``` python
 def test_post_handler(item) -> dict:
     return {
         "received_name": item.name,
@@ -211,7 +216,7 @@ def user_info_handler(item) -> dict:
 ![[docker_python_n8n.webp|500]]
 
 예 : docker-compose.yml 예제
-```
+``` python
 
 services:
   python-api: # 추후 http request 주소 eg : http://python-api:8000/user-register

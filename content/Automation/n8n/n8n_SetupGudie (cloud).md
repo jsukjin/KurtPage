@@ -12,19 +12,21 @@ draft: "False"
 > setup guide for n8n in google cloud
 
 ---
-<font color="#68ff6e">Table of Contents</font>
+<br>
+<strong><font color="#9fffa3">Table of Contents</font></strong>
 
-1. [1. Google Cloud Setup](#1.%20Google%20Cloud%20Setup)
-	1. [A. Project / Virtual Machine Setup](#A.%20Project%20/%20Virtual%20Machine%20Setup)
-	2. [B. Configuration](#B.%20Configuration)
-		1. [Machine Configuration](#Machine%20Configuration)
-		2. [OS and Storage](#OS%20and%20Storage)
-		3. [Networking](#Networking)
-		4. [FireWall](#FireWall)
-2. [2. Docker setup](#2.%20Docker%20setup)
-3. [3. Ngrok setup](#3.%20Ngrok%20setup)
-4. [4. Result](#4.%20Result)
+1. [1. Google Cloud Setup](#1-google-cloud-setup)
+	1. [A. Project / Virtual Machine Setup](#a-project--virtual-machine-setup)
+	2. [B. Configuration](#b-configuration)
+		1. [Machine Configuration](#machine-configuration)
+		2. [OS and Storage](#os-and-storage)
+		3. [Networking](#networking)
+		4. [FireWall](#firewall)
+2. [2. Docker setup](#2-docker-setup)
+3. [3. Ngrok setup](#3-ngrok-setup)
+4. [4. Result](#4-result)
 
+<br>
 
 ---
 # 1. Google Cloud Setup

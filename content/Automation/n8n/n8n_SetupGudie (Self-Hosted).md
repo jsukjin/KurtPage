@@ -12,7 +12,8 @@ draft: "False"
 > setup guide for self-hosted n8n
 
 ---
-<font color="#68ff6e">Table of Contents</font>
+<br>
+<strong><font color="#9fffa3">Table of Contents</font></strong>
 
 1. [1. Docker desktop 설치](#1.%20Docker%20desktop%20%EC%84%A4%EC%B9%98)
 2. [2. Git repo 받기](#2.%20Git%20repo%20%EB%B0%9B%EA%B8%B0)
@@ -27,6 +28,7 @@ draft: "False"
 6. [6. 결과](#6.%20%EA%B2%B0%EA%B3%BC)
 7. [6. docker cmd](#6.%20docker%20cmd)
 
+<br>
 
 
 ---

@@ -13,15 +13,18 @@ draft: "False"
 > Goole Cloud Run을 활용한 python 실행
 
 ---
-<font color="#68ff6e">Table of Contents</font>
+<br>
+<strong><font color="#9fffa3">Table of Contents</font></strong>
 
-1. [1. Google Cloud setup](#1.%20Google%20Cloud%20setup)
-2. [2. Python setup](#2.%20Python%20setup)
-3. [3. n8n](#3.%20n8n)
-	1. [1. Authorization](#1.%20Authorization)
-4. [4. Test](#4.%20Test)
-	1. [1. GET](#1.%20GET)
-	2. [2. POST](#2.%20POST)
+1. [1. Google Cloud setup](#1-google-cloud-setup)
+2. [2. Python setup](#2-python-setup)
+3. [3. n8n](#3-n8n)
+	1. [1. Authorization](#1-authorization)
+4. [4. Test](#4-test)
+	1. [1. GET](#1-get)
+	2. [2. POST](#2-post)
+
+<br>
 
 ---
 # 1. Google Cloud setup
@@ -58,7 +61,7 @@ draft: "False"
 - GET / POST를 테스트하는 간단한 python 코드
 - <font color="#f79646">VALID_AUTH_TOKEN 의 경우 header auth를 사용하기 위함</font>
 
-```
+``` python
 import functions_framework
 from flask import abort
 
