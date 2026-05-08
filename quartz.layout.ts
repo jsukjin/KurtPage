@@ -24,6 +24,8 @@ export const defaultContentPageLayout: PageLayout = {
     Component.ArticleTitle(),
     Component.ContentMeta(),
     Component.TagList(),
+    // TOC는 본문 안 마크다운에서 직접 제어
+    // beforeBody TOC 제거 → Summary 위에 TOC 뜨는 문제 해결
   ],
   left: [
     Component.PageTitle(),
@@ -39,19 +41,20 @@ export const defaultContentPageLayout: PageLayout = {
       ],
     }),
     Component.Explorer({
-  folderClickBehavior: "collapse", // what happens when you click a folder ("link" to navigate to folder page on click or "collapse" to collapse folder on click)
-  folderDefaultState: "collapsed", 
-  useSavedState: false, // 👈 테스트를 위해 잠시 false로 설정 (캐시된 상태 무시)
-}),
+      folderClickBehavior: "collapse",
+      folderDefaultState: "collapsed",
+      useSavedState: false,
+    }),
   ],
   right: [
+    // 우측 TOC — 기존 그대로 유지
     Component.Graph(),
     Component.DesktopOnly(Component.TableOfContents()),
     Component.Backlinks(),
   ],
 }
 
-// components for pages that display lists of pages  (e.g. tags or folders)
+// components for pages that display lists of pages (e.g. tags or folders)
 export const defaultListPageLayout: PageLayout = {
   beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle(), Component.ContentMeta()],
   left: [
@@ -66,11 +69,10 @@ export const defaultListPageLayout: PageLayout = {
         { Component: Component.Darkmode() },
       ],
     }),
-    // 👇 Explorer 컴포넌트를 다음과 같이 수정하세요
     Component.Explorer({
-     folderClickBehavior: "collapse", // what happens when you click a folder ("link" to navigate to folder page on click or "collapse" to collapse folder on click)
-     folderDefaultState: "collapsed", 
-	 useSavedState: false,
+      folderClickBehavior: "collapse",
+      folderDefaultState: "collapsed",
+      useSavedState: false,
     }),
   ],
   right: [],

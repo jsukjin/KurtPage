@@ -14,6 +14,13 @@ async function mouseEnterHandler(
     return
   }
 
+  // # 앵커 링크 (같은 페이지 내 이동) → popover 제외
+  // 수동 TOC의 [텍스트](#heading) 링크가 여기서 걸러짐
+  const targetUrl = new URL(link.href)
+  if (targetUrl.pathname === window.location.pathname && targetUrl.hash !== "") {
+    return
+  }
+
   async function setPosition(popoverElement: HTMLElement) {
     const { x, y } = await computePosition(link, popoverElement, {
       strategy: "fixed",
@@ -39,7 +46,6 @@ async function mouseEnterHandler(
     }
   }
 
-  const targetUrl = new URL(link.href)
   const hash = decodeURIComponent(targetUrl.hash)
   targetUrl.hash = ""
   targetUrl.search = ""
@@ -121,7 +127,10 @@ function clearActivePopover() {
 }
 
 document.addEventListener("nav", () => {
-  const links = [...document.querySelectorAll("a.internal")] as HTMLAnchorElement[]
+  // TOC 안의 링크(.toc-content a)는 제외하고 나머지 internal 링크에만 popover 적용
+  const links = [
+    ...document.querySelectorAll("a.internal:not(.toc-content a)"),
+  ] as HTMLAnchorElement[]
   for (const link of links) {
     link.addEventListener("mouseenter", mouseEnterHandler)
     link.addEventListener("mouseleave", clearActivePopover)

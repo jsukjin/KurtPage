@@ -61,7 +61,7 @@ export default ((opts?: Partial<Options>) => {
         >
           {fileData.toc.map((tocEntry) => (
             <li key={tocEntry.slug} class={`depth-${tocEntry.depth}`}>
-              <a href={`#${tocEntry.slug}`} data-for={tocEntry.slug}>
+              <a href={`#${tocEntry.slug}`} data-for={tocEntry.slug} data-no-popover="true">
                 {tocEntry.text}
               </a>
             </li>
@@ -86,7 +86,7 @@ export default ((opts?: Partial<Options>) => {
         <ul>
           {fileData.toc.map((tocEntry) => (
             <li key={tocEntry.slug} class={`depth-${tocEntry.depth}`}>
-              <a href={`#${tocEntry.slug}`} data-for={tocEntry.slug}>
+              <a href={`#${tocEntry.slug}`} data-for={tocEntry.slug} data-no-popover="true">
                 {tocEntry.text}
               </a>
             </li>
