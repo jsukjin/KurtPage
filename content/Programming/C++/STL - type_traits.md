@@ -1,5 +1,5 @@
 ---
-title: std::type_traits 개념 정리
+title: STL_type_traits
 author: KurtJang
 tags:
   - Blog
@@ -11,45 +11,56 @@ draft: "False"
 ---
 
 > [!NOTE] 
-> C++ STL type_traits 개념 정리 (C++ 11)
+> STL std::type_traits 에 대한 내용 정리 (C++ 11)
 
 ---
-<font color="#b3f594"><strong>Table of Contents</strong> </font>
+<strong><font color="#9fffa3">Table of Contents</font></strong>
 
-- [Code Example](#code-example)
-- [Callout Example](#callout-example)
-
-
-- [is_convertible](#is_convertible)
-	- [1. 파라미터](#1-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0)
-	- [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-- [enable_if](#enable_if)
-	- [1. 파라미터](#1-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0)
-	- [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-	- [3. 실제 코드](#3-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
-	- [3. 실제 코드](#3-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
-- [Code Example](#code-example)
-- [Callout Example](#callout-example)
+1. [is_convertible](#is_convertible)
+	1. [1. 파라미터](#1.%20%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0)
+	2. [2. 예제 코드](#2.%20%EC%98%88%EC%A0%9C%20%EC%BD%94%EB%93%9C)
+2. [enable_if](#enable_if)
+	1. [1. 파라미터](#1.%20%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0)
+	2. [2. 예제 코드](#2.%20%EC%98%88%EC%A0%9C%20%EC%BD%94%EB%93%9C)
+	3. [3. 실제 코드](#3.%20%EC%8B%A4%EC%A0%9C%20%EC%BD%94%EB%93%9C)
+3. [3. extent](#3.%20extent)
+	1. [1. 파라미터](#1.%20%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0)
+	2. [2. 예제 코드](#2.%20%EC%98%88%EC%A0%9C%20%EC%BD%94%EB%93%9C)
+	3. [3. 실제 코드](#3.%20%EC%8B%A4%EC%A0%9C%20%EC%BD%94%EB%93%9C)
+4. [4. remove_extent](#4.%20remove_extent)
+	1. [1. 구성 요소](#1.%20%EA%B5%AC%EC%84%B1%20%EC%9A%94%EC%86%8C)
+	2. [2. 예제 코드](#2.%20%EC%98%88%EC%A0%9C%20%EC%BD%94%EB%93%9C)
+	3. [3. 실제 코드](#3.%20%EC%8B%A4%EC%A0%9C%20%EC%BD%94%EB%93%9C)
 
 
 ---
 
 # is_convertible
+<br>
 
-- <font color="#b3f594">핵심 정의 </font> : 탸입 `from` 에서 타입 `to` 로 암시적 변환(implicit conversion)이 가능한지
-             컴파일 타임에 검사하는 type trait 입니다.
-             
-- <font color="#b3f594">작동 원리 </font> : `std::is_convertible<From, To>::value` 의 경우 변환이 가능하면 `true` , 
-             불가능 하면 `false` 를 반환한다
-             
-- <font color="#b3f594">주요 용도 </font> : 상속 관계확인 "자식 포인터를 부모포인터로 바꿀수 있는가" 이나 함수 전달가능
-             여부를 체크할 때 사용 합니다.
+<font color="#9fffa3">1. 핵심 정의</font>
+
+타입 'from' 에서 타입 to로 암시적 변환 (implicit conversion) 이 가능한지
+컴파일 타임에 검사하는 type trait 입니다.
+
+<font color="#9fffa3">2. 작동 원리</font>
+
+`std::is_convertible<From,To>::value`  의 경우 변환이 가능하면 `true`
+변환이 불가능하면 `false` 를 반환 합니다.
+
+
+<font color="#9fffa3">3. 주요 용도</font>
+
+상속 관계확인이나 함수 전달 가능 여부를 체크할 때 사용 합니다.
+<br>
 
 ## 1. 파라미터
 
 - `From` : 원본 타입
 - `To` : 변환하고자 하는 대상 타입
 - `value` : 변환 가능 여부를 담은 `static constexpr bool` 값
+
+<br>
 
 ## 2. 예제 코드
 
@@ -83,22 +94,33 @@ int main
 ```
 
 ---
+<br>
+
 # enable_if
+<br>
+
+<font color="#9fffa3">1. 핵심 정의</font>
+
+특정 조건이 `true` 일때만 해당 템플릿 함수나 클래스 컴파일 대상에 포함시키는 도구
 
 
-- <font color="#b3f594">핵심 정의 </font> : 특정 조건이 `true` 일때만 해당 템플릿 함수나 클래스 컴파일 대상에 포함시키는 
-             도구 입니다.
+<font color="#9fffa3">2. SFINAE 원칙</font>
 
-- <font color="#b3f594">SFINAE 원칙 </font> : 조건이 거짓이라 템플릿 치환에 실패해도 에러를 내지 않고 그냥 "이 함수는 
-               후보가 아니네" 하고 조용히 넘어가는 성질을 이용 합니다.
+조건이 거짓이라 템플릿 치환에 실패해도 에러를 내지 않고 그냥 "이 함수는 후보가 아니네"
+하고 조용히 넘어가는 성질을 이용 합니다.
 
-- <font color="#b3f594">중요 포인트 </font> : 함수 오버로딩 시 특정 타입들에 대해서만 함수르 열여주고 싶을때만 필수적입니다.
+<font color="#9fffa3">3. 중요 포인트</font>
+
+함수 오버로딩 시 특정 타입들에 대해서만 함수로 열어주고 싶을 때 필수적 사용
+<br>
 
 ## 1. 파라미터
 
 - `condition` : `true` 혹은 `false` 로 결정되는 컴파일 타입 조건
 - `Type` : 조건이 `true` 일때 `std::enable_if<...>::type` 이 가질 타입 (생략 시 `void` )
- 
+
+<br>
+
 ## 2. 예제 코드
 
 ``` cpp
@@ -137,7 +159,7 @@ int main()
 	*/
 }
 ```
-
+<br>
 
 ## 3. 실제 코드
 
@@ -181,13 +203,27 @@ deleter(const deleter<U>&)
 ```
 
 ---
-# 3. extent
 
--  <font color="#b3f594">핵심 정의 </font> : 타입 `T` 가 배열일때, 지정한 차원의 요소 개수를 상수로 반환
--  <font color="#b3f594">작동 원리 </font> :`int[10]` 이라면 `10` 을 `int[10][20]` 에서 1번째 차원을 물으면 `20` 반환
--  <font color="#b3f594">차원 지정 </font> : 두번째 템플릿 인자로 숫자를 넘겨 몇번째 대괄호의 크기를 잴지 결정한다
--  <font color="#b3f594">중요 포인트</font> : 배열이 아니거나, 크기가 명시되지 않은 배열은 
-               해당 차원의 크기를 물으면 `0 ` 반환
+# 3. extent
+<br>
+
+<font color="#9fffa3">1. 핵심 정의</font>
+
+타입 `T`  가 배열일때 , 지정한 차원의 요소 개수를 상수로 변환
+
+<font color="#9fffa3">2. 작동 원리</font>
+
+`int[10]` 이라면 `10` 을 `int[10][20]` 에서 1번째 차원을 물으면 `20` 반환
+
+<font color="#9fffa3">3. 차원 지정</font>
+
+2번째 템플릿 인자로 숫자를 넘겨 몇번째 대괄호의 크기를 측정할지 결정 한다
+
+<font color="#9fffa3">4. 중요 포인트</font>
+
+배열이 아니거나, 크기가 명시되지 않은 배열은 해당 차원의 크기를 물으면 `0` 반환
+
+<br>
 
 ## 1. 파라미터
 
@@ -195,6 +231,7 @@ deleter(const deleter<U>&)
 - `N` : 몇번째 차원 (기본값 0 = 첫번째 차원)
 - `::value` : 해당 차원의 크기 반환 (크기를 알수 없으면 0)
 
+<br>
 
 ## 2. 예제 코드
 
@@ -207,7 +244,7 @@ std::extent<int[4][3],1>::value;   //3 (두번째 차원)
 std::extent<int[]>::value;         //0 
 std::extent<int>::vlaue;           //0 (배열 아님)
 ```
-
+<br>
 
 ## 3. 실제 코드
 ``` cpp
@@ -231,6 +268,7 @@ ipl::make_unique<float>[4]();
 ```
 
 ---
+<br>
 
 # 4. remove_extent
 
@@ -242,8 +280,9 @@ int[4] -> int
 float -> float (배열 아니면 그대로)
 ```
 
+<br>
 
-# 1. 구성 요소
+## 1. 구성 요소
 - `T` : 변환할 타입
 - `::type` : 배열 껍데기 벗긴 결과 타입
 
@@ -251,6 +290,7 @@ float -> float (배열 아니면 그대로)
 float[][] -> float[] // 한번만 벗김
 float[] -> float     // 두번 벗김
 ```
+<br>
 
 ## 2. 예제 코드
 
@@ -263,6 +303,7 @@ std::remove_extent<float>::type       //float 그대로
 std::remove_extent<int[4]>::type      // int
 
 ```
+<br>
 
 ## 3. 실제 코드
 
@@ -301,80 +342,3 @@ make_unique(size_t size)
 
 
 
-
-\
-
-
----
-
-들여쓰기
-
-<details>
-  <summary>여기를 클릭해서 내용을 확인하세요 (제목)</summary>
-  <div markdown="1">
-    
-    이곳에 펼쳐질 내용을 작성합니다.
-    - 리스트도 가능하고
-    - **굵은 글씨**도 가능합니다.
-
-  </div>
-</details>
-
-
-%% 옵시디언에서만 보이는 주석 %%
-
-
-<font color="#2ecc71">초록색 텍스트</font>
-<font color="#3498db">파란색 텍스트</font>
-<font color="#ff4d4d">빨간색 텍스트</font>
-<font color="#ffa500">주황색 텍스트</font>
-<font color="#f1c40f">노란색 텍스트</font>
-
-<font color="#b3f594">■ 이미지의 그 초록색 (연두)</font>
-<font color="#80dfff">■ 시원한 밝은 파란색</font>
-<font color="#ff6b6b">■ 예쁜 다홍빛 빨간색</font>
-<font color="#ffb15b">■ 질문하신 주황색</font>
-<font color="#ffff80">■ 눈 안 아픈 부드러운 노란색</font>
-
-<strong style="color:#b3f594">연두색 (이미지 속 그 색상)</strong>
-<strong style="color:#80dfff">밝은 하늘색 (정보/참고)</strong>
-<strong style="color:#ff6b6b">다홍색 (주의/경고)</strong>
-<strong style="color:#ffb15b">주황색 (핵심 키워드)</strong>
-<strong style="color:#ffff80">부드러운 노란색 (강조)</strong>
-
-# Code Example
-``` cpp fold title:Cmd
-au.3dVisualize.Listeners 1
-```
-
-``` cpp fold title:subject
-int a = 1;
-int b = 2;
-a + b 3;
-```
-
-
-# Callout Example
-> [!info] info
-> Contents
-
-> [!todo] todo
-> Contents
-
-> [!error] Title
-> Contents
-
-> [!question] Title
-> Contents
-
-> [!example] Title
-> Contents
-
-> [!tip] 팁 (보통 민트/연초록)
-> 내용을 입력하세요.
-
-> [!success] 성공 (보통 초록/민트)
-> 완료된 항목이나 긍정적인 내용을 넣기 좋습니다.
-
-> [!check] 체크 (success와 비슷함)
-> 확인이 필요한 내용에 사용하세요.

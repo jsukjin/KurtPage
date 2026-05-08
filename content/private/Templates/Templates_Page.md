@@ -13,10 +13,10 @@ draft: "False"
 ---
 <font color="#b3f594"><strong>Table of Contents</strong> </font>
 
-%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
-
 - [Code Example](#code-example)
 - [Callout Example](#callout-example)
+
+%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
 
 ---
 
