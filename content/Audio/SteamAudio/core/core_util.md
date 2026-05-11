@@ -1,5 +1,5 @@
 ---
-title: util.h 정리
+title: "[Core] util 분석"
 author: KurtJang
 tags:
   - Blog
@@ -11,7 +11,7 @@ draft: "False"
 ---
 
 > [!NOTE] 
-> util.h 내용 정리
+> [SteamAudio] util.h 분석 (core module)
 
 ---
 <br>

@@ -11,7 +11,7 @@ draft: "False"
 ---
 
 > [!NOTE] 
-> Stema Audio Array class 분석 (core module)
+> [SteamAudio] Array class 분석 (core module)
 
 ---
 <br>

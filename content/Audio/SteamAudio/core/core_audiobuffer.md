@@ -1,5 +1,5 @@
 ---
-title: "[Core] audiobuffer 분석"
+title: "[Core] AudioBuffer 분석"
 author: KurtJang
 tags:
   - Blog
@@ -11,7 +11,7 @@ draft: "true"
 ---
 
 > [!NOTE] 
-> Audio Buffer 분석
+> [SteamAudio] AudioBuffer 분석 (core module)
 
 ---
 <br>
