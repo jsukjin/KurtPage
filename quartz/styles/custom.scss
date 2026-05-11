@@ -9,7 +9,7 @@ article img {
   height: auto !important;
 }
 
-// 모든 콜아웃 공통 스타일
+// 1. 모든 콜아웃 공통 스타일
 .callout {
   border: 1px solid rgba(100, 100, 100, 0.2) !important;
   border-radius: 8px !important;
@@ -17,13 +17,14 @@ article img {
   padding: 12px 16px !important;
   border-left-width: 5px !important;
   border-left-style: solid !important;
+
   .callout-title {
     font-weight: 800 !important;
     margin-bottom: 4px;
   }
 }
 
-// 🔵 파란색 계열
+// 🔵 파란색 계열: info, note, todo, abstract, summary
 .callout[data-callout="info"], .callout[data-callout="note"],
 .callout[data-callout="todo"], .callout[data-callout="abstract"],
 .callout[data-callout="summary"] {
@@ -32,7 +33,7 @@ article img {
   .callout-title, .callout-icon { color: #007bff !important; }
 }
 
-// 🔴 빨간색 계열
+// 🔴 빨간색 계열: danger, error, bug, fail, missing
 .callout[data-callout="danger"], .callout[data-callout="error"],
 .callout[data-callout="bug"], .callout[data-callout="fail"],
 .callout[data-callout="missing"] {
@@ -41,7 +42,7 @@ article img {
   .callout-title, .callout-icon { color: #e91e63 !important; }
 }
 
-// 🟡 노란/주황색 계열
+// 🟡 노란/주황색 계열: warning, caution, attention, question, help, faq
 .callout[data-callout="warning"], .callout[data-callout="caution"],
 .callout[data-callout="attention"], .callout[data-callout="question"],
 .callout[data-callout="help"], .callout[data-callout="faq"] {
@@ -50,7 +51,7 @@ article img {
   .callout-title, .callout-icon { color: #ffa500 !important; }
 }
 
-// 🟢 녹색 계열
+// 🟢 녹색 계열: success, check, done, tip, hint, important
 .callout[data-callout="success"], .callout[data-callout="check"],
 .callout[data-callout="done"], .callout[data-callout="tip"],
 .callout[data-callout="hint"], .callout[data-callout="important"] {
@@ -59,27 +60,27 @@ article img {
   .callout-title, .callout-icon { color: #4caf50 !important; }
 }
 
-// 🟣 보라색 계열
+// 🟣 보라색 계열: example
 .callout[data-callout="example"] {
   border-left-color: #9c27b0 !important;
   background-color: rgba(156, 39, 176, 0.1) !important;
   .callout-title, .callout-icon { color: #9c27b0 !important; }
 }
 
-// ⚪ 회색 계열
+// ⚪ 회색 계열: quote, cite
 .callout[data-callout="quote"], .callout[data-callout="cite"] {
   border-left-color: #888888 !important;
   background-color: rgba(136, 136, 136, 0.1) !important;
   .callout-title, .callout-icon { color: #888888 !important; }
 }
 
-// 인라인 스타일 색상
+// 다크 모드와 라이트 모드 공통: 인라인 스타일 색상 강제 적용
 body.dark span[style*="color"],
 body span[style*="color"] {
   color: inherit !important;
 }
 
-// 다크 모드 최적화
+// 색상별 다크 모드 최적화
 body.dark {
   span[style*="rgb"] {
     color: inherit !important;
@@ -89,26 +90,10 @@ body.dark {
     &[style*="0, 176, 240"]  { color: rgb(0, 176, 240) !important; }
     &[style*="112, 48, 160"] { color: rgb(112, 48, 160) !important; }
   }
+
   mark {
     background-color: var(--highlight-color, rgba(146, 208, 80, 0.3)) !important;
     color: #ffffff !important;
     border-bottom: 2px solid rgba(146, 208, 80, 0.8);
   }
-}
-
-// 문단 간격 - body 붙여서 specificity 높임
-body .popover-hint > p {
-  margin-bottom: 1em !important;
-  margin-top: 0.5em !important;
-}
-
-body .popover-hint > p:empty {
-  margin-bottom: 1em !important;
-  min-height: 1.2em !important;
-  display: block !important;
-}
-
-// 스페이스바 들여쓰기 보이게
-body .popover-hint > p {
-  white-space: pre-wrap !important;
 }
