@@ -4,10 +4,15 @@ on:
   push:
     branches:
       - v4
-      
-env:
-  THEME_NAME: github-theme
- 
+
+# [2026-05-12] THEME_NAME env 제거
+# 이전에는 빌드할 때마다 saberzero1/quartz-themes 에서 최신 github-theme 을
+# 자동으로 다운로드해서 quartz/styles/themes/_index.scss 를 덮어쓰고 있었음.
+# 로컬에서 아무리 수정해도 배포 시점에 항상 원격 최신 버전으로 교체되어
+# 로컬 테마와 GitHub Pages 결과가 달라지는 원인이었음.
+# → env.THEME_NAME 및 "Fetch Quartz Theme" step 을 제거하여
+#   git 에 커밋된 로컬 _index.scss 가 그대로 빌드/배포되도록 수정.
+
 permissions:
   contents: read
   pages: write
@@ -29,8 +34,9 @@ jobs:
           node-version: 22
       - name: Install Dependencies
         run: npm ci
-      - name: Fetch Quartz Theme
-        run: curl -s -S https://raw.githubusercontent.com/saberzero1/quartz-themes/master/action.sh | bash -s -- $THEME_NAME
+      # [2026-05-12] 아래 step 제거됨 (위 주석 참고)
+      # - name: Fetch Quartz Theme
+      #   run: curl -s -S https://raw.githubusercontent.com/saberzero1/quartz-themes/master/action.sh | bash -s -- $THEME_NAME
       - name: Build Quartz
         run: npx quartz build
       - name: Upload artifact
