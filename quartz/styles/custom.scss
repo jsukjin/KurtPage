@@ -38,7 +38,7 @@ article img {
 //       TOC/Backlinks 사이드바 섹션 제목도 동일하게 처리.
 // =====================================================================
 
-html[saved-theme="dark"] {
+:root:root[saved-theme="dark"] {
   // 본문 헤딩 → 녹색 (#7ee787)
   h1, h2, h3, h4, h5, h6, thead {
     color: var(--h1-color-theme) !important;
@@ -87,7 +87,7 @@ html[saved-theme="dark"] {
   }
 }
 
-html[saved-theme="light"] {
+:root:root[saved-theme="light"] {
   h1, h2, h3, h4, h5, h6, thead {
     color: var(--h1-color-theme) !important;
   }
