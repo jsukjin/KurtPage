@@ -1,8 +1,11 @@
 ---
-title: memory.test 분석
+title: "[Test] memory.test 분석"
 author: KurtJang
 tags:
   - Blog
+  - "#Programming"
+  - CPP
+  - SteamAudio
 date: 2026-05-08
 draft: "False"
 ---

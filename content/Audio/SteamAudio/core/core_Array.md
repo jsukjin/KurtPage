@@ -1,8 +1,11 @@
 ---
-title: "[SteamAudio] Array<T,N> 분석"
+title: "[Core] Array<T,N> 분석"
 author: KurtJang
 tags:
   - Blog
+  - "#Programming"
+  - "#SteamAudio"
+  - "#CPP"
 date: 2026-05-07
 draft: "False"
 ---
