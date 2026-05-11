@@ -5,19 +5,9 @@ tags:
   - Blog
 date: <% tp.date.now("YYYY-MM-DD")%>
 draft: "False"
----
-
-> [!NOTE] 
-> 요약
-
+description: "요약"
 ---
 <br>
-<font color="#b3f594"><strong>Table of Contents</strong> </font>
-
-- [Code Example](#code-example)
-- [Callout Example](#callout-example)
-
-%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
 
 <br>
 

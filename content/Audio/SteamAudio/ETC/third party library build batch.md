@@ -8,24 +8,10 @@ tags:
   - SteamAudio
 date: 2026-05-11
 draft: "True"
+description: "third party library build /배포 하는 batch 시스템 (python, bat)"
 ---
 
-> [!NOTE] 
-> third party library build /배포 하는 batch 시스템 (python, bat)
-
 ---
-<br>
-<font color="#b3f594"><strong>Table of Contents</strong> </font>
-
-- [Code Example](#code-example)
-- [Callout Example](#callout-example)
-
-%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
-
-<br>
-
----
-
 # 1. 구조 
 
 작업에 필요한 third party library를 다운/빌드/배포는 다음과 같은 방식으로 이루어 진다
@@ -36,20 +22,23 @@ draft: "True"
 > 3. 빌드 (Cmake)
 > 4. 필요한 파일만 골라서 별도의 폴어 (deps)에 정리
 
-* Phonon_itest.exe 를 빌드 할려면 GLFW, IMGui 등이 필요하다 이 라이브러리들은 
-내 프로젝트에 포함되어 있지 않으니 외부에서 가져와야 한다
+* Phonon_itest.exe 를 빌드 할려면 GLFW, IMGui 등이 필요하다 
+- 이 라이브러리들은  내 프로젝트에 포함되어 있지 않으니 외부에서 가져와야 한다
+
+---
 
 # 2. 전체 흐름
-<br>
+
 > [!info] 
 > 1. feath  - Github에서 소스코드 다운로드 (git clone)
 > 2. configure - CMake로 visual studio 프로젝트 생성
 > 3. build - Visual Studio로 실제 compile -> .lib 생성
 > 4. copy - 헤도 + .lib 만 골라서 별도의 폴더에 정리
 
+---
 
 # 3. 단계별 실제 동작
-<br>
+
 ## 1. fetch - git clone
 ``` cpp
 git clonse https://github.com/PortAudio/protaudio.git
@@ -89,15 +78,15 @@ cmake --install deps-build/portaudio/build/windows-x64 --config Release
 # portaudio.h lib 파일을 지정폴더로 복사
 ```
 
-
+---
 
 # 4. 배포 automation
-<br>
-배치파일로는 git clon, cmake 호출 등 복잡한 처리가 불가능하기에 python으로 자동화 작업의
-효율을 올리기 위하여 python으로 작업 되었다
+
+- 배치파일로는 git clon, cmake 호출 등 복잡한 처리가 불가능하기에 
+  python으로 자동화 작업의 효율을 올리기 위하여 python으로 작업 되었다
 
 ## 1. 예제 코드
-<br>
+
 ``` python
 # build_mylib.py
 # mylib 을 GitHub 에서 받아서 빌드 후 deps/ 에 정리
@@ -299,87 +288,3 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-
-
-
-
----
-
-
-<font color="#b3f594">1. 역할 분리</font>
-<font color="#b3f594">1. 역할 분리</font>
-<font color="#b3f594">1. 역할 분리</font>
-<font color="#b3f594">1. 역할 분리</font>
-
-
-들여쓰기
-
-<details>
-  <summary>여기를 클릭해서 내용을 확인하세요 (제목)</summary>
-  <div markdown="1">
-    
-    이곳에 펼쳐질 내용을 작성합니다.
-    - 리스트도 가능하고
-    - **굵은 글씨**도 가능합니다.
-
-  </div>
-</details>
-
-
-%% 옵시디언에서만 보이는 주석 %%
-
-
-<font color="#2ecc71">초록색 텍스트</font>
-<font color="#3498db">파란색 텍스트</font>
-<font color="#ff4d4d">빨간색 텍스트</font>
-<font color="#ffa500">주황색 텍스트</font>
-<font color="#f1c40f">노란색 텍스트</font>
-
-<font color="#b3f594">■ 이미지의 그 초록색 (연두)</font>
-<font color="#80dfff">■ 시원한 밝은 파란색</font>
-<font color="#ff6b6b">■ 예쁜 다홍빛 빨간색</font>
-<font color="#ffb15b">■ 질문하신 주황색</font>
-<font color="#ffff80">■ 눈 안 아픈 부드러운 노란색</font>
-
-<strong style="color:#b3f594">연두색 (이미지 속 그 색상)</strong>
-<strong style="color:#80dfff">밝은 하늘색 (정보/참고)</strong>
-<strong style="color:#ff6b6b">다홍색 (주의/경고)</strong>
-<strong style="color:#ffb15b">주황색 (핵심 키워드)</strong>
-<strong style="color:#ffff80">부드러운 노란색 (강조)</strong>
-
-# Code Example
-``` cpp fold title:Cmd
-au.3dVisualize.Listeners 1
-```
-
-``` cpp fold title:subject
-int a = 1;
-int b = 2;
-a + b 3;
-```
-
-
-# Callout Example
-> [!info] info
-> Contents
-
-> [!todo] todo
-> Contents
-
-> [!error] Title
-> Contents
-
-> [!question] Title
-> Contents
-
-> [!example] Title
-> Contents
-
-> [!tip] 팁 (보통 민트/연초록)
-> 내용을 입력하세요.
-
-> [!success] 성공 (보통 초록/민트)
-> 완료된 항목이나 긍정적인 내용을 넣기 좋습니다.
-
-> [!check] 체크 (success와 비슷함)
-> 확인이 필요한 내용에 사용하세요.

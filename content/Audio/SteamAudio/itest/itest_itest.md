@@ -7,61 +7,43 @@ tags:
   - "#CPP"
   - SteamAudio
 date: 2026-05-11
-draft: "true"
+draft: "False"
+description: "[SteamAudio] ITest.h/cpp 분석 (itest module)"
 ---
 
-> [!NOTE] 
-> [SteamAudio] ITest.h / cpp 분석 (itest module)
-
 ---
-
-<br>
-<font color="#b3f594"><strong>Table of Contents</strong> </font>
-
-1. [1. itest](#1-itest)
-2. [2. 구성 요소](#2-%EA%B5%AC%EC%84%B1-%EC%9A%94%EC%86%8C)
-3. [3. 예제 코드](#3-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-4. [4. 실제 코드](#4-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
-
-
-%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
-
-<br>
-
----
-
 # 1. itest
-<br>
-`itest.h` / `itest.cpp` 는 함수를 선택해서 실행하는 디스패처 시스템
-`phonon_itest.exe context` 처럼 이름을 인자로 넘기면 해당 itest 함수가 실행 된다
+
+- `itest.h` / `itest.cpp` 는 함수를 선택해서 실행하는 디스패처 시스템
+- `phonon_itest.exe context` 처럼 이름을 인자로 넘기면 해당 itest 함수가 실행 된다
 
 # 2. 구성 요소
 
-`FunctionRegistry`
-- `typedef void (*Function)()` 
-	- void 함수 포인터
-- `registerFunction(name, function)`
-	- 이름으로 함수 등록
-- `getFunctionName()` 
-	- 등록된 이름 목록 반환
-- `runFunction(name)`
-	- 이름으로 함수 실행, 없으면 에러 출력
+1. `FunctionRegistry`
+	- `typedef void (*Function)()` 
+		- void 함수 포인터
+	- `registerFunction(name, function)`
+		- 이름으로 함수 등록
+	- `getFunctionName()` 
+		- 등록된 이름 목록 반환
+	- `runFunction(name)`
+		- 이름으로 함수 실행, 없으면 에러 출력
 
-`getFunctionRegistry()`
-- `FunctionRegistry` 싱글톤 반환
-- `IPL_BUILDING_MAIN` 이 정의된 곳에서만 본문 생성
-- 나머지 파일에서는 선엄나 보냄
+2. `getFunctionRegistry()`
+	- `FunctionRegistry` 싱글톤 반환
+	- `IPL_BUILDING_MAIN` 이 정의된 곳에서만 본문 생성
+	- 나머지 파일에서는 선엄나 보냄
 
-`ITEST(name)` 매크로
-- 함수선언 + `SelfRegisteringFunction` 전역 객체 + 함수 본문을 한번에 생성
+3. `ITEST(name)` 매크로
+	- 함수선언 + `SelfRegisteringFunction` 전역 객체 + 함수 본문을 한번에 생성
 
-`main()`
-- `argc != 2` 이면 `usage()` 출력
-- `argv[1]` 로 `runFunction()` 호출
+4. `main()`
+	- `argc != 2` 이면 `usage()` 출력
+	- `argv[1]` 로 `runFunction()` 호출
 
+---
 
 # 3. 예제 코드
-<br>
 
 ``` cpp
 ITEST (context)
@@ -83,10 +65,9 @@ static void itest_context()
 
 ```
 
-
+---
 
 # 4. 실제 코드
-<br>
 ``` cpp
 class FunctionRegistry
 {
@@ -217,11 +198,14 @@ int main(int argc, char** argv)
 }
 
 ```
-<br>
+
+---
+
 # 5. 전체 실행 흐름
 
 > [!info] 전체 실행 흐름
-> 전역 객체 생성 (main 이전)
+> 
+> 전역 객체 생성 (main 이전) <br>
 > 1. `SelfRegisteringFunction register_itest_context`
 > 2. `getFunctionRegistry()["context"] = itest_context`
 > 3. `SelfRegisteringFunction register_itest_audioengine`

@@ -27,6 +27,9 @@ const config: QuartzConfig = {
         body: "Source Sans Pro",
         code: "IBM Plex Mono",
       },
+      // [2026-05-12] colors를 github-theme 팔레트에 맞게 수정
+      // quartz.config.ts의 colors는 base.scss의 --light, --dark, --secondary 등
+      // Quartz 기본 변수에 매핑됨. github-theme의 _index.scss 색상과 최대한 일치시킴.
       colors: {
         lightMode: {
           light: "#ffffff",
@@ -44,7 +47,7 @@ const config: QuartzConfig = {
           lightgray: "#21262d",
           gray: "#8b949e",
           darkgray: "#c9d1d9",
-          dark: "#f0f6fc",
+          dark: "#7ee787",  // github-theme 다크모드 헤딩 녹색
           secondary: "#58a6ff",
           tertiary: "#8b949e",
           highlight: "rgba(56, 139, 253, 0.1)",

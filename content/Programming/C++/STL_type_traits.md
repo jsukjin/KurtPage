@@ -8,11 +8,7 @@ tags:
   - "#STL"
 date: 2026-05-01
 draft: "False"
----
-
-> [!NOTE] 
-> STL std::type_traits 에 대한 내용 정리 (C++ 11)
-
+description: "STL std::type_traits 에 대한 내용 정리 (C++ 11)"
 ---
 <br>
 <strong><font color="#9fffa3">Table of Contents</font></strong>

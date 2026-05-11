@@ -8,28 +8,12 @@ tags:
   - "#CPP"
 date: 2026-05-07
 draft: "False"
+description: "[SteamAudio] Array class 분석 (core module)"
 ---
-
-> [!NOTE] 
-> [SteamAudio] Array class 분석 (core module)
-
----
-<br>
-<strong style="color:#b3f594">Table of Contents </strong>
-
-%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
-
-- [1. 핵심개념](#1-%ED%95%B5%EC%8B%AC%EA%B0%9C%EB%85%90)
-- [2. 전체 구조](#2-%EC%A0%84%EC%B2%B4-%EA%B5%AC%EC%A1%B0)
-- [3. 멤버 변수 분석](#3-%EB%A9%A4%EB%B2%84-%EB%B3%80%EC%88%98-%EB%B6%84%EC%84%9D)
-- [4. 함수별 분석](#4-%ED%95%A8%EC%88%98%EB%B3%84-%EB%B6%84%EC%84%9D)
-- [5. 예제 코드](#5-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-	- [1. Array<float, 2> (3,4)](#1-arrayfloat-2-34)
-	- [2. Array<float,3> (2,3,4)](#2-arrayfloat3-234)
 
 ---
 
-# 1. 핵심개념
+# 1. Array
 
 - 다차원 배열을 메모리 연속으로 저장하면서 `arr[i][j][k]`  문법을 유지하는 클래스
 
@@ -47,7 +31,9 @@ Array<float, 2> arr(3,4);    //한번에 연속 할당
 arr[1][2] = 7.0f;            //문법 그대로 SIMD 가능
 ```
 
-# 2. 전체 구조
+---
+
+# 2. 구성 요소
 
 > [!info] info
 > `Array<T,N>`  - N 차원 배열 일반 버전 (recursive)
@@ -58,9 +44,6 @@ arr[1][2] = 7.0f;            //문법 그대로 SIMD 가능
 > - `mElements` - 실제 데이터 (연속 메모리)
 > - `mPointers` - 다차원 접근용 포인터 배열
 > - `mSizes[N]` - 각 차원 크기 저장
-
-
-# 3. 멤버 변수 분석
 
 ``` cpp
 //마지막 차원 크기
@@ -79,8 +62,10 @@ Array<T*, N-1> mPointers;
 //size(dim) 함수에서 사용
 size_t mSizes[N];
 ```
-<br>
-# 4. 함수별 분석
+
+---
+
+# 3. 함수별 분석
 ``` cpp
 
 //기본 생성자 = 0 인 이유?
@@ -328,9 +313,9 @@ void swap(Array<T,1>& other)
 
 } //end of class Array<T,1>
 ```
-<br>
+---
 
-# 5. 예제 코드
+# 4. 예제 코드
 
 ## 1. Array<float, 2> (3,4) 
 
@@ -433,6 +418,9 @@ for (auto i = 0u; mSize > 0 && i < numElements / mSize; ++i)
 //i=5 -> mPointers.mElements[5] = &mElements[20] [1][2] 시작 
 
 ```
+
+---
+# 5. Conclusion
 
 
 > [!info] 요약

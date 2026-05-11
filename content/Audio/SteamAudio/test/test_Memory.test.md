@@ -8,34 +8,9 @@ tags:
   - SteamAudio
 date: 2026-05-08
 draft: "False"
+description: "[SteamAudio] Memory.test.cpp 분석 (test module)"
 ---
-
-> [!NOTE] 
-> [SteamAudio] Memory.test.cpp 분석 (test module)
-> 
-
 ---
-<br>
-<font color="#b3f594"><strong>Table of Contents</strong> </font>
-
-- [1. How to Debug](#1-how-to-debug)
-- [2. 함수 분석](#2-%ED%95%A8%EC%88%98-%EB%B6%84%EC%84%9D)
-	- [1. callback](#1-callback)
-	- [TEST 1 - manual](#test-1---manual)
-	- [TEST 2 - STL container](#test-2---stl-container)
-	- [TEST 3 - make_unique](#test-3---make_unique)
-	- [TEST 4 - make_shared](#test-4---make_shared)
-	- [TEST 5 - Array 1D](#test-5---array-1d)
-	- [TEST 6 - Array 2D](#test-6---array-2d)
-	- [ETC](#etc)
-		- [WIndows Heap](#windows-heap)
-
-%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
-
-<br>
-
----
-<br>
 
 # 1. How to Debug
 
@@ -68,11 +43,11 @@ pause
 ```
 
 ![[SteamAudio_Catch2_Test_Result.webp|478]]
+- 테스트 성공시 아래와 같이 `test passed`  출력
 
 ---
-<br>
+
 # 2. 함수 분석
-<br>
 
 ## 1. callback
 ``` cpp
@@ -138,7 +113,7 @@ init measureHeap()
 #endif
 
 ```
-<br>
+---
 
 ## TEST 1 - manual
 
@@ -192,7 +167,7 @@ TEST_CASE("Memory::allocate allocation are routed correctly", "[memory]")
 
 
 ```
-<br>
+---
 
 ## TEST 2 - STL container 
 ``` cpp
@@ -240,7 +215,7 @@ TEST_CASE("STL container allocation are routed correctly", "[memory])
     
 }
 ```
-<br>
+---
 
 ## TEST 3 - make_unique
 ``` cpp
@@ -292,7 +267,7 @@ TEST_CASE("make_unique allocation are routed correctly", "[memory]")
 }
 
 ```
-<br>
+---
 
 ## TEST 4 - make_shared
 ``` cpp
@@ -328,7 +303,7 @@ TEST_CASE("make_shared allocation are routed correctly", "[memory]")
     WARN("gBytesAllocated = " << gBytesAllocated);
 }
 ```
-<br>
+---
 
 ## TEST 5 - Array 1D
 ``` cpp
@@ -361,7 +336,7 @@ TEST_CASE("Array<T> allocation are routed correctly", "[memory]")
     WARN("gBytesAllocated = " << gBytesAllocated);
 }
 ```
-<br>
+---
 
 ## TEST 6 - Array 2D
 ``` cpp
@@ -393,10 +368,10 @@ TEST_CASE("Array<T,2> allocation are routed correctly", "[memory]")
 }
 
 ```
-<br>
+---
 
-## ETC
-### WIndows Heap
+# 3. ETC
+## 1. Windows Heap
 
 - Test에서 heap을 측정해야 되기에 Windows Heap에 대한 내용이 필요함
 
@@ -428,7 +403,7 @@ while (HeapWalk(heap, &heapEntry))
 
 ```
 
-<font color="#b3f594">Test Code</font>``
+## 2. Test code
 ``` cpp
  //== TEST 예제 ==
  
@@ -447,5 +422,5 @@ while (HeapWalk(heap, &heapEntry))
  
 ```
 
----
+
 

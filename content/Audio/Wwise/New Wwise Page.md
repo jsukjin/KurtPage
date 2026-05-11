@@ -5,12 +5,7 @@ tags:
   - Blog
 date: 2025-12-31
 draft: "true"
----
-
-> [!NOTE] 
-> 요약
-
-
+description: "요약"
 ---
 # Table of Contents
 

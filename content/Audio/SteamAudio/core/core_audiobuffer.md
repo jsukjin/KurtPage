@@ -8,44 +8,28 @@ tags:
   - "#SteamAudio"
 date: 2026-05-11
 draft: "False"
+description: "[SteamAudio] AudioBuffer 분석 (core module)"
 ---
 
-> [!NOTE] 
-> [SteamAudio] AudioBuffer 분석 (core module)
-
 ---
-<br>
-<font color="#b3f594"><strong>Table of Contents</strong> </font>
-
-1. [2. 구성 요소](#2-%EA%B5%AC%EC%84%B1-%EC%9A%94%EC%86%8C)
-2. [3. 예제 코드](#3-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-3. [4. 실전 코드](#4-%EC%8B%A4%EC%A0%84-%EC%BD%94%EB%93%9C)
-
-
-%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
-
-<br>
-
----
-<Br>
 # 1. Introduction
 
-`AudioBuffer` 는 DSP 처리에 사용되는 de-interleaved Audio buffer이다
-모든 Effect (Paning, binaural, Convolution 등) 의 입출력 타입으로 사용된다
+- `AudioBuffer` 는 DSP 처리에 사용되는 de-interleaved Audio buffer이다
+- 모든 Effect (Paning, binaural, Convolution 등) 의 입출력 타입으로 사용된다
 
-<font color="#b3f594">1. De-Interleaved 방식</font>
+<strong><font color="#b3f594">1. De-Interleaved 방식</font></strong>
 - PortAudio의 interleaved 방식과 반대다
 - 채널별로 데이터가 분리되어 있어 DSP 처리가 효율적이다
 
-<font color="#b3f594">2. 3가지 생성자</font>
+<strong><font color="#b3f594">2. 3가지 생성자</font></strong>
 - 데이터를 직접 소유하거나 외부 데이터를 참조ㅎ만 하거나 다른 버퍼의
   단일 채널로만 참조 할 수 있다
 
 
-<font color="#b3f594">3. mData 포인터 이중역할</font>
+<strong><font color="#b3f594">3. mData 포인터 이중역할</font></strong>
 - 내부 데이터를 소유할 때와 외부 데이터를 참조할때 모두 `mData` 로 접근한다
 
-<br>
+---
 
 # 2. 구성 요소
 
@@ -59,6 +43,7 @@ draft: "False"
 - `TailRemaining` : reverb 잔향 등 아직 처리할 데이터가 남아 있음
 - `TailComplete` : 처리 완료
 
+---
 
 # 3. 예제 코드
 
@@ -78,12 +63,10 @@ float channels1[] = {R0, R1, R2};
 
 > [!info] De-interlaved 가 DSP에 유리한 이유?
 > 채널 하나에 SIMD 연산 적용이 가능하다
-> for (int i = 0; i < N ; ++i)
-> {
->     out(i) = *= gain;
-> } 
-> 이런 gain 조절을 SIMD로 처리가 가능하다
+>
+>
 
+---
 
 # 4. 실전 코드
 ``` cpp

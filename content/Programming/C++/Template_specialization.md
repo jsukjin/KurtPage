@@ -8,11 +8,7 @@ tags:
   - "#CPP_Template"
 date: 2026-05-07
 draft: "False"
----
-
-> [!NOTE] 
-> C++ Template 특수화 (Template specialization) / 부분특수화 (Partial Specialization) 개념 정리
-
+description: "C++ Template 특수화 (Template specialization) / 부분특수화 (Partial Specialization) 개념 정리"
 ---
 <br>
 <strong><font color="#9fffa3">Table of Contents</font></strong>
@@ -23,8 +19,6 @@ draft: "False"
 	3. [2. 실제 코드](#2-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
 
 <br>
-
-%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
 
 ---
 

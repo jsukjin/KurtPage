@@ -5,11 +5,7 @@ tags:
   - Blog
 date: 2026-05-07
 draft: "False"
----
-
-> [!NOTE] 
-> operator new , new[] 에 대한 내용 정리
-
+description: "operator new , new[] 에 대한 내용 정리"
 ---
 <br>
 <strong><font color="#9fffa3">Table of Contents</font></strong>

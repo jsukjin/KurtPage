@@ -7,11 +7,7 @@ tags:
   - Wwise
 date: 2026-03-17
 draft: "true"
----
-
-> [!NOTE] 
-> AkComponent optimization 
-
+description: "AkComponent optimization"
 ---
 <font color="#68ff6e">Table of Contents</font>
 

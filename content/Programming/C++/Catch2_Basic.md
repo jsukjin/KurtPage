@@ -1,5 +1,5 @@
 ---
-title: Catch2 기초
+title: Catch2 basic
 author: KurtJang
 tags:
   - Blog
@@ -7,44 +7,26 @@ tags:
   - "#CPP"
   - "#Debug"
 date: 2026-05-08
-draft: "true"
+draft: "False"
+description: Catch2에 대한 기초 개념/사용법에 대한 내용
 ---
 
-> [!NOTE] 
-> Catch2에 대한 기초 개념/사용법에 대한 내용
-
 ---
-<br>
-<font color="#b3f594"><strong>Table of Contents</strong> </font>
 
-1. [1. 구성 요소](#1-%EA%B5%AC%EC%84%B1-%EC%9A%94%EC%86%8C)
-2. [2. 설치 방법](#2-%EC%84%A4%EC%B9%98-%EB%B0%A9%EB%B2%95)
-	1. [A. 직접 설치](#a-%EC%A7%81%EC%A0%91-%EC%84%A4%EC%B9%98)
-3. [3. 예제 코드](#3-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-4. [4. 실제 코드](#4-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
-5. [5. 유용한 링크](#5-%EC%9C%A0%EC%9A%A9%ED%95%9C-%EB%A7%81%ED%81%AC)
+# 1. Catch2
 
-
-%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
+- Catch2 는 C++ 개발자들 사이에서 매우 인기있는 **유닛 테스트(Unit Test) 프레임 워크** 입니다.
+- 기존의 Google Test(gtest)나 cppunit에 비해 문법이 훨씬 직관적이다
+- 설정이 간단하다는 강력한 장점이 있어 현대적인 C++ 프로젝트에서 자주 사용 됩니다.
 
 <br>
 
----
-<br>
-# Catch2
+<strong><font color="#b3f594">1. 자연스러운 문법</font></strong>
 
+- 테스트 이름에 일반 문장을 쓸수 있고 `REQUIRE(a==b)` 와 같이 표준 C++ 비교 연산자를
+  그대로 사용 합니다.
 
-Catch2 는 C++ 개발자들 사이에서 매우 인기있는 **유닛 테스트(Unit Test) 프레임 워크** 입니다.
-기존의 Google Test(gtest)나 cppunit에 비해 문법이 훨씬 직관적이고, 설정이 간단하다는
-강력한 장점이 있어 현대적인 C++ 프로젝트에서 자주 사용 됩니다.
-
-
-<font color="#b3f594">1. 자연스러운 문법</font>
-
-테스트 이름에 일반 문장을 쓸수 있고 `REQUIRE(a==b)` 와 같이 표준 C++ 비교 연산자를
-그대로 사용 합니다.
-
-<font color="#b3f594">2. 섹션 구조</font>
+<strong><font color="#b3f594">2. 섹션 구조</font></strong>
 
 하나의 텍스트 케이스 안에서 `SECTION`을 나눠 실행할 수 있습니다.
 각 섹션은 독립적인 환경에서 실행되므로 설정(Setup)과 해지(Teardown) 코드를 중복해서 

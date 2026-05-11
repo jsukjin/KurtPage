@@ -8,51 +8,35 @@ tags:
   - "#SteamAudio"
 date: 2026-05-09
 draft: "False"
+description: "[SteamAudio] util.h 분석 (core module)"
 ---
 
-> [!NOTE] 
-> [SteamAudio] util.h 분석 (core module)
-
 ---
-<br>
-<font color="#b3f594"><strong>Table of Contents</strong> </font>
 
-- [1. 구성요소](#1-%EA%B5%AC%EC%84%B1%EC%9A%94%EC%86%8C)
-- [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-- [3. 실제 코드](#3-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
-- [4. Q&A](#4-qa)
+# 1.util.h
 
-%% create table of contents (옵션 없는거) 를 마지막에 사용해 주세요 %%
-
-<br>
-
----
-<br>
-# util.h
-
-C API Handle (`IPLContext` , `IPLScene` 등) 생명주기를 관리하는 템플릿 유틸리티 모음
-C API의 `void*`  핸들과 내부 C++ 객체 사이의 변환, 레퍼런스 카운팅, 메모리 해제를 담당
+- C API Handle (`IPLContext` , `IPLScene` 등) 생명주기를 관리하는 템플릿 유틸리티 모음 
+- C API의 `void*`  핸들과 내부 C++ 객체 사이의 변환, 레퍼런스 카운팅, 메모리 해제를 담당
 
 
 
 <font color="#b3f594">1. Handle&lt;T&gt;  - 레퍼런스 카운팅 래퍼</font>
 
-`shared_ptr<T>` 를 감싸고 `atomic<T>` 로 레퍼런스 카운터를 직접 관리한다
-`retain()` / `releas()` 로 수명을 제어하며 카운트가 0이 되면 내부 포인터를 해제한다
+- `shared_ptr<T>` 를 감싸고 `atomic<T>` 로 레퍼런스 카운터를 직접 관리한다
+- `retain()` / `releas()` 로 수명을 제어하며 카운트가 0이 되면 내부 포인터를 해제한다
 <br>
 <font color="#b3f594">2. Handle&lt;T&gt;  - 타입 매핑 테이블</font>
-`ipl::Context` <-> `IPLContext` 처럼 C++ 타입과 C핸들 타입을 연결하는 특성 구조체
-`DEFINE_OPAQUE_HANDLE` 매크로로 모든 타입 쌍을 등록한다
+- `ipl::Context` <-> `IPLContext` 처럼 C++ 타입과 C핸들 타입을 연결하는 특성 구조체
+- `DEFINE_OPAQUE_HANDLE` 매크로로 모든 타입 쌍을 등록한다
 <br>
 <font color="#b3f594">3. 전역 헬퍼 함수 4개</font>
-`createHandle` `retainHandle` `releaseHandle` `derefHandle` 로 각각
-핸들의 생성/참조/해제/역참조를 처리한다
+- `createHandle` `retainHandle` `releaseHandle` `derefHandle` 로 각각
+- 핸들의 생성/참조/해제/역참조를 처리한다
 
-<br>
-
+---
 ## 1. 구성요소
 
-<br>
+
 `Handle<T>`
 
 - `mPointer`
@@ -85,6 +69,8 @@ C API의 `void*`  핸들과 내부 C++ 객체 사이의 변환, 레퍼런스 카
 - C핸들 -> `Handle<T>` -> `get()` 으로 `shared_ptr<T>` 반환
 - 실제 C++ 객체에 접근할 때 사용
 
+---
+
 ## 2. 예제 코드
 
 ``` cpp
@@ -108,7 +94,7 @@ releaseHandle<Context>(handle);
 // mRefCount : 1 -> 0 -> free
 // handle == nullptr
 ```
-<br>
+---
 
 ## 3. 실제 코드
 ``` cpp
@@ -306,16 +292,17 @@ shared_ptr<Context> contextFromHandle(typename HandleTraits<T>::opaque_type hand
 
 
 ```
-<br>
+---
 
 ## 4. Q&A
 
 <font color="#b3f594">왜 이렇게 번거롭게 C API 사용해야 하나요?</font>
 
-UE 는 자체 빌드 시스템이 있고 Unity는 C# 기반이라 다른 컴파일러, 다른언어, 다른 런타임
-환경에서 작동이 되야 합니다.
+UE 는 자체 빌드 시스템이 있고 Unity는 C# 기반이라 다른 컴파일러, 다른언어,<br>
+다른 런타임 환경에서 작동이 되야 합니다.
 
-만약 내 Context 클래스를 UE에 그대로 넘기면?
+**만약 내 Context 클래스를 UE에 그대로 넘기면?**
+
 - 컴파일러가 다르면 클래스 레이아웃이 다를 수 있음
 - vtable 구조가 달라질 수 있음
 - 네임 스페이스 충돌

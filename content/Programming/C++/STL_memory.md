@@ -8,11 +8,7 @@ tags:
   - "#STL"
 date: 2026-04-30
 draft: "False"
----
-
-> [!NOTE] 
->  STL std::memory 에 대한 내용 정리
-
+description: "STL std::memory 에 대한 내용 정리"
 ---
 <br>
 <strong><font color="#9fffa3">Table of Contents</font></strong>

@@ -5,11 +5,7 @@ tags:
   - "#Blog"
 date: 2025-12-31
 draft: "true"
----
-
-> [!NOTE] 
-> 요약
-
+description: "요약"
 ---
 <font color="#92d050">Table Of Contents</font>
 
