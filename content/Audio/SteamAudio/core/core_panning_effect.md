@@ -7,7 +7,7 @@ tags:
   - CPP
   - SteamAudio
 date: 2026-05-12
-draft: "False"
+draft: "true"
 description: "[SteamAudio] Panning Effect 분석 (core module)"
 ---
 
@@ -95,6 +95,97 @@ AudioEffectState PanningEffect::apply (const PanningEffectParam& params,
 
 
 
+
+
+---
+
+
+## phi 반시계 방향 이유
+
+### 1. 개념
+
+Steam Audio 좌표계에서 **앞방향이 -z** 입니다. 일반 수학 좌표계와 반대이기 때문에 phi가 반시계로 증가합니다.
+
+`atan2(x, z)` 에 각 방향을 대입하면:
+
+```
+정면   (x=0,  z=-1) → atan2(0,  -1) = π
+왼쪽   (x=-1, z=0)  → atan2(-1,  0) = -π/2
+오른쪽 (x=1,  z=0)  → atan2(1,   0) = +π/2
+```
+
+여기에 `+π` 를 더하면:
+
+```
+정면   π   + π = 2π → fmodf → 0
+왼쪽  -π/2 + π = π/2    ← 작은 값
+오른쪽 π/2 + π = 3π/2   ← 큰 값
+```
+
+0에서 증가할수록 왼쪽으로 가므로 **반시계**가 됩니다.
+
+#### 구성 요소 / 특이사항
+
+|방향|x|z|atan2(x,z)|+π 후|phi|
+|---|---|---|---|---|---|
+|정면|0|-1|π|2π|0 (fmodf)|
+|왼쪽|-1|0|-π/2|π/2|π/2|
+|후방|0|1|0|π|π|
+|오른쪽|1|0|π/2|3π/2|3π/2|
+
+**앞방향이 -z 인 이유** — Steam Audio는 OpenGL 관례를 따릅니다. 카메라/리스너가 -z 방향을 바라보는 Right-handed 좌표계입니다.
+
+---
+
+### 2. 예제 코드
+
+cpp
+
+```cpp
+// 각 방향의 phi 값 직접 계산
+float kPi = 3.14159f;
+
+// 정면 (0, 0, -1)
+float phi = fmodf(kPi + atan2f(0.0f, -1.0f), 2 * kPi);
+// = fmodf(π + π, 2π) = fmodf(2π, 2π) = 0 ✅
+
+// 왼쪽 (-1, 0, 0)
+phi = fmodf(kPi + atan2f(-1.0f, 0.0f), 2 * kPi);
+// = fmodf(π + (-π/2), 2π) = π/2 ✅
+
+// 오른쪽 (1, 0, 0)
+phi = fmodf(kPi + atan2f(1.0f, 0.0f), 2 * kPi);
+// = fmodf(π + π/2, 2π) = 3π/2 ✅
+```
+
+---
+
+### 3. 실전 코드
+
+cpp
+
+```cpp
+SphericalVector3(const Vector3<T>& cartesian)
+{
+    radius    = cartesian.length();
+    elevation = asin(cartesian.y() / radius);
+
+    if (abs(elevation - Math::kHalfPi) < 1e-5f ||
+        abs(elevation + Math::kHalfPi) < 1e-5f)
+    {
+        azimuth = 0; // 정수직 위/아래 → azimuth 정의 불가 → 0 고정
+    }
+    else
+    {
+        // 앞방향 = -z 이므로
+        // atan2(x, z) : 정면(-z)에서 반시계로 증가
+        // +π : 범위를 -π~π → 0~2π 로 이동
+        // fmodf : 2π를 0으로 wrap
+        azimuth = fmodf(Math::kPi + atan2(cartesian.x(), cartesian.z()),
+                        2 * Math::kPi);
+    }
+}
+```
 
 
 
