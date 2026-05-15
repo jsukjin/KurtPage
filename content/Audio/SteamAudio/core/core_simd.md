@@ -45,18 +45,16 @@ __m128 b = _mm_loadu_ps(b);
 __m128 result = _mm_add_ps(a,b); //연산 횟수 1
 ```
 
-
 ## 2. 버전
 
 > [!info] SIMD 버전
-> MMX (1996)     : 정수 8개 동시 처리 (64 bit)
-> SSE   (1999)     : float 4개 동시 처리 (128 bit)
-> SSE2 (2001)     : doueble 2개 동시 처리 (128 bit)
-> SSE4 (2007)     : 추가 명령어 확장
-> AVX  (2011)     : float 8개 동시 처리 (256 bit)
-> AVX512 (2016) : float 16개 동시 처리 (512 bit)
-> NEON (ARM)   : float 4개 동시 처리 (128 bit)
-
+> - MMX (1996)     : 정수 8개 동시 처리 (64 bit)
+> - SSE   (1999)     : float 4개 동시 처리 (128 bit)
+> - SSE2 (2001)     : doueble 2개 동시 처리 (128 bit) 
+> - SSE4 (2007)     : 추가 명령어 확장
+> - AVX  (2011)     : float 8개 동시 처리 (256 bit)
+> - AVX512 (2016) : float 16개 동시 처리 (512 bit)
+> - NEON (ARM)   : float 4개 동시 처리 (128 bit)
 
 ## 3. 장점
 
@@ -76,8 +74,7 @@ __m128 result = _mm_add_ps(a,b); //연산 횟수 1
 - 캐시 히트율 향상 
 - 메모리 접근 횟수 감소
 
-
-### 4. 단점
+## 4. 단점
 
 <strong style="color:#b3f594">1. 정렬 제약</strong>
 - SSE -> 16 byte 정렬 필요
@@ -322,12 +319,12 @@ inline bool isAligned(const T* p)
 ```
 
 > [!info] SIMD 헤더 파일 목록
->MMX -  <mmintrin.h> 
-   SSE      - <xmmintrin.h>
-> SSE2     - <emmintrin.h> 
-> SSE3     - <pmmintrin.h> 
-> SSE4.1 - <smmintrin.h>
-> SSE4.2 - <nmmintrin.h>  
-> AVX, AVX2, AVX512 - <immintrin.h>
-> NEON (ARM) - <arm_neon.h>   
+>- <mmintrin.h> - MMX
+>- <xmmintrin.h> - SSE
+>- <emmintrin.h> - SSE2
+>- <pmmintrin.h> - SSE3
+>- <smmintrin.h> - SSE4.1
+>- <nmmintrin.h> - SSE4.2
+>- <immintrin.h> - AVX, AVX2, AVX512
+>- <arm_neon.h> - NEON (ARM)
 >
