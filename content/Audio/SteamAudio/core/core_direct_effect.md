@@ -151,11 +151,15 @@ AudioEffectState DirectEffect::apply(const DirectEffectParams& params,
     float eqCoeffs[Bands::kNumBands];
     
     //gain coeff 값 계산 후 저장
-    calculateGainAndEQ(params.directPath, params.flags, params.transmissionType, gain, eqCoeffs);
+    calculateGainAndEQ(params.directPath, params.flags,
+					    params.transmissionType, 
+					    gain, 
+					    eqCoeffs);
 
 	//EQ 적용해야 되는지 체크
     auto applyEQ = ((params.flags & ApplyAirAbsorption) ||
-        ((params.flags & ApplyTransmission) && params.transmissionType == TransmissionType::FreqDependent));
+        ((params.flags & ApplyTransmission) && 
+        params.transmissionType == TransmissionType::FreqDependent));
 
     for (auto i = 0; i < mNumChannels; ++i)
     {
@@ -211,12 +215,14 @@ void DirectEffect::calculateGainAndEQ(const DirectSoundPath& directPath,
                                       float* eqCoeffs)
 {
     // 1. Apply distance attenuation.
-    overallGain = (flags & ApplyDistanceAttenuation) ? directPath.distanceAttenuation : 1.0f;
+    overallGain = (flags & ApplyDistanceAttenuation) ?
+				   directPath.distanceAttenuation : 1.0f;
 
     // 2. pply air absorption.
     for (auto i = 0; i < Bands::kNumBands; ++i)
     {
-        eqCoeffs[i] = (flags & ApplyAirAbsorption) ? directPath.airAbsorption[i] : 1.0f;
+        eqCoeffs[i] = (flags & ApplyAirAbsorption) ?
+			           directPath.airAbsorption[i] : 1.0f;
         //eg) airAbosprtion[0.9, 0.5, 0.1]
         // cqCoeffs[0.9, 0.5, 0.1] -> applied
     }
@@ -236,7 +242,8 @@ void DirectEffect::calculateGainAndEQ(const DirectSoundPath& directPath,
         {
             if (transmissionType == TransmissionType::FreqIndependent)
             {
-                // Update attenuation factor with the average transmission coefficient and appropriately applied
+                // Update attenuation factor with the average 
+	            // transmission coefficient and appropriately applied
                 // occlusion factor.
                 
                 /* 주파수 무관 투과 : 평균 투과율로 overallGain 조정
@@ -254,7 +261,8 @@ void DirectEffect::calculateGainAndEQ(const DirectSoundPath& directPath,
                 }
                 averageTransmissionFactor /= Bands::kNumBands;
 
-                overallGain *= directPath.occlusion + (1 - directPath.occlusion) * averageTransmissionFactor;
+                overallGain *= directPath.occlusion + 
+					(1 - directPath.occlusion) * averageTransmissionFactor;
             }
             else if (transmissionType == TransmissionType::FreqDependent)
             {
@@ -270,7 +278,8 @@ void DirectEffect::calculateGainAndEQ(const DirectSoundPath& directPath,
                 */
                 for (auto i = 0; i < Bands::kNumBands; ++i)
                 {
-                    eqCoeffs[i] *= directPath.occlusion + (1 - directPath.occlusion) * directPath.transmission[i];
+                    eqCoeffs[i] *= directPath.occlusion + 
+                    (1 - directPath.occlusion) * directPath.transmission[i];
                 }
             }
         }
@@ -284,11 +293,15 @@ void DirectEffect::calculateGainAndEQ(const DirectSoundPath& directPath,
     }
 
     if ((flags & ApplyAirAbsorption) ||
-        ((flags & ApplyTransmission) && transmissionType == TransmissionType::FreqDependent))
+        ((flags & ApplyTransmission) && 
+        transmissionType == TransmissionType::FreqDependent))
     {
-        // Maxium value in EQ filter should be normalized to 1 and common factor rolled into attenuation factor,
-        // this will allow for smooth changes to frequency changes (possible exception is if maximum remains
-        // and low / mid frequencies change dramatically). Minimum value should be .0625 (24 dB) for any frequency
+        // Maxium value in EQ filter should be normalized to 1 and 
+        // common factor rolled into attenuation factor,
+        // this will allow for smooth changes to frequency changes 
+        // (possible exception is if maximum remains
+        // and low / mid frequencies change dramatically). 
+        // Minimum value should be .0625 (24 dB) for any frequency
         // band for a good EQ response.
         
         /* eq) eqCoeffs[0.5, 0.25, 0.1], overallGain = 1.0

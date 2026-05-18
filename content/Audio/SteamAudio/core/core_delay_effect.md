@@ -174,7 +174,8 @@ AudioEffectState DelayEffect::apply(const DelayEffectParams& params,
     //이후 프레임 : 이전 delay에서 부터 시작
     
     
-    auto dDelayInSamples = mFirstFrame ? 0.0f : (params.delayInSamples - mPrevDelayInSamples) / mFrameSize;
+    auto dDelayInSamples = mFirstFrame ? 0.0f : 
+    (params.delayInSamples - mPrevDelayInSamples) / mFrameSize;
     //프레임 내 sample 당 delay 변화량
     //eg ) 이전 4800, 현재 4900 
     //frameSize= 1024 -> dealy = 100/1024 = 0.097    
@@ -215,7 +216,8 @@ AudioEffectState DelayEffect::apply(const DelayEffectParams& params,
         //weights[0] = 1.0 - weights[1];
         
     
-        out[0][i] = weights[0] * mRingBuffer[delayedSampleIndex[0]] + weights[1] * mRingBuffer[delayedSampleIndex[1]];
+        out[0][i] = weights[0] * mRingBuffer[delayedSampleIndex[0]] +
+        weights[1] * mRingBuffer[delayedSampleIndex[1]];
 		//두 buffer interpolation
 		//delay가 정수 샘플이 아닐떼 pop/phase issue 방지
 
@@ -229,11 +231,13 @@ AudioEffectState DelayEffect::apply(const DelayEffectParams& params,
     mPrevDelayInSamples = static_cast<float>(params.delayInSamples);
 	//다음 시작점
 
-    mNumTailSamplesRemaining = std::max(params.delayInSamples - mFrameSize, 0);
+    mNumTailSamplesRemaining = std::max(params.delayInSamples - 
+    mFrameSize, 0);
     // 딜레이 -> frame 크기이면 tail 남음
     //예) delay=4800, frameSize=1024, taile=3776 sample 남음
     
-    return (mNumTailSamplesRemaining > 0) ? AudioEffectState::TailRemaining : AudioEffectState::TailComplete;
+    return (mNumTailSamplesRemaining > 0) ? 
+    AudioEffectState::TailRemaining : AudioEffectState::TailComplete;
 }
 
 AudioEffectState DelayEffect::tail(AudioBuffer& out)
@@ -269,7 +273,8 @@ AudioEffectState DelayEffect::tail(AudioBuffer& out)
     }
 	
 	//tail 다 소진하면 TailCompelete 반환
-    return (mNumTailSamplesRemaining > 0) ? AudioEffectState::TailRemaining : AudioEffectState::TailComplete;
+    return (mNumTailSamplesRemaining > 0) ? 
+    AudioEffectState::TailRemaining : AudioEffectState::TailComplete;
 }
 ```
 
