@@ -1,5 +1,5 @@
 ---
-title: "[lgorithm] BVH, Octree 분석"
+title: BVH, Octree 분석
 author: KurtJang
 tags:
   - Blog
@@ -26,7 +26,7 @@ description: BVH (Bounding volume Hierarchy), Octree 분석
 > - BVH 있음 -> log(10만) = 17번만 검사 - `O(log n)`
 
 ---
-# 1.1 구성요소
+## 1.1 구성요소
 
 루트 노드 (전체 씬 AABB)
     ├── 내부 노드 (왼쪽 절반 AABB)
@@ -70,7 +70,7 @@ AABB 교차 검사 -> 범위 비교 6번, 매우 빠름
 
 ## 2.1 구성 요소
 
-OctreeNode 예제
+OctreeNode 구조 (예)
 ``` cpp
 strcut OctreeNode{
 	AABB bounds,                //해당 셀의 공간 범위
@@ -86,6 +86,8 @@ strcut OctreeNode{
 > 3. 자식셀로 이동
 > 4. 자식셀에서 8등분으로 분할
 > 5. 재귀 반복
+
+---
 
 # 3. 비교
 
@@ -116,94 +118,175 @@ Octree / BVH 비교
 >- 정적 collider -> BVH
 >- 동적 collider -> 매 피프레임 BVH 부분 재빌드
 
-
 ---
 
+# 4. 예제 코드
 
+``` cpp
+#include <vector>
+#include <algorithm>
 
+// -----------------------------------------------
+// AABB — 축 정렬 바운딩 박스
+// min/max 로 박스 범위 표현
+// -----------------------------------------------
+struct AABB {
+    float minX, minY, minZ;
+    float maxX, maxY, maxZ;
 
+    // 레이가 이 박스에 닿는가?
+    bool intersect(float rayOx, float rayOy, float rayOz,
+                   float rayDx, float rayDy, float rayDz) const
+    {
+        // 각 축별로 레이가 박스 범위 안에 들어오는 t 구간 계산
+        float tMin = (minX - rayOx) / rayDx;
+        float tMax = (maxX - rayOx) / rayDx;
+        if (tMin > tMax) std::swap(tMin, tMax);
 
+        float tyMin = (minY - rayOy) / rayDy;
+        float tyMax = (maxY - rayOy) / rayDy;
+        if (tyMin > tyMax) std::swap(tyMin, tyMax);
 
+        if (tMin > tyMax || tyMin > tMax) return false;
+        tMin = std::max(tMin, tyMin);
+        tMax = std::min(tMax, tyMax);
 
+        float tzMin = (minZ - rayOz) / rayDz;
+        float tzMax = (maxZ - rayOz) / rayDz;
+        if (tzMin > tzMax) std::swap(tzMin, tzMax);
 
+        if (tMin > tzMax || tzMin > tMax) return false;
+        return true;
+    }
+};
 
+// -----------------------------------------------
+// Triangle — 인덱스 3개짜리 삼각형
+// -----------------------------------------------
+struct Triangle {
+    int indices[3];  // 버텍스 배열의 인덱스
+};
 
----
+// -----------------------------------------------
+// BVHNode — BVH 트리의 노드 하나
+// -----------------------------------------------
+struct BVHNode {
+    AABB bounds;            // 이 노드를 감싸는 박스
 
-<font color="#b3f594">1. 역할 분리</font>
-<font color="#b3f594">1. 역할 분리</font>
-<font color="#b3f594">1. 역할 분리</font>
-<font color="#b3f594">1. 역할 분리</font>
+    int leftChild  = -1;   // 왼쪽 자식 인덱스 (-1 = 없음)
+    int rightChild = -1;   // 오른쪽 자식 인덱스 (-1 = 없음)
 
+    int triangleStart = -1; // 리프 노드: 담당 삼각형 시작 인덱스
+    int triangleCount = 0;  // 리프 노드: 담당 삼각형 수
 
-들여쓰기
+    bool isLeaf() const { return leftChild == -1; }
+};
 
-<details>
-  <summary>여기를 클릭해서 내용을 확인하세요 (제목)</summary>
-  <div markdown="1">
-    
-    이곳에 펼쳐질 내용을 작성합니다.
-    - 리스트도 가능하고
-    - **굵은 글씨**도 가능합니다.
+// -----------------------------------------------
+// BVH — 빌드 + 쿼리
+// -----------------------------------------------
+struct BVH {
+    std::vector<BVHNode> nodes;
 
-  </div>
-</details>
+    // 삼각형들로 BVH 빌드
+    void build(const std::vector<Triangle>& triangles)
+    {
+        nodes.clear();
 
+        // 루트 노드 생성 → 모든 삼각형 포함
+        BVHNode root;
+        root.triangleStart = 0;
+        root.triangleCount = static_cast<int>(triangles.size());
+        root.bounds = calcAABB(triangles, 0, root.triangleCount);
+        nodes.push_back(root);
 
-%% 옵시디언에서만 보이는 주석 %%
+        // 재귀적으로 분할
+        subdivide(0, triangles);
+    }
 
+    // 레이 쏘기 — 충돌 여부 반환
+    bool anyHit(float ox, float oy, float oz,
+                float dx, float dy, float dz) const
+    {
+        return traverse(0, ox, oy, oz, dx, dy, dz);
+    }
 
-<font color="#2ecc71">초록색 텍스트</font>
-<font color="#3498db">파란색 텍스트</font>
-<font color="#ff4d4d">빨간색 텍스트</font>
-<font color="#ffa500">주황색 텍스트</font>
-<font color="#f1c40f">노란색 텍스트</font>
+private:
+    // 노드를 둘로 분할
+    void subdivide(int nodeIdx, const std::vector<Triangle>& triangles)
+    {
+        BVHNode& node = nodes[nodeIdx];
 
-<font color="#b3f594">■ 이미지의 그 초록색 (연두)</font>
-<font color="#80dfff">■ 시원한 밝은 파란색</font>
-<font color="#ff6b6b">■ 예쁜 다홍빛 빨간색</font>
-<font color="#ffb15b">■ 질문하신 주황색</font>
-<font color="#ffff80">■ 눈 안 아픈 부드러운 노란색</font>
+        // 삼각형이 2개 이하면 리프 노드로 확정
+        if (node.triangleCount <= 2)
+            return;
 
-<strong style="color:#b3f594">연두색 (이미지 속 그 색상)</strong>
-<strong style="color:#80dfff">밝은 하늘색 (정보/참고)</strong>
-<strong style="color:#ff6b6b">다홍색 (주의/경고)</strong>
-<strong style="color:#ffb15b">주황색 (핵심 키워드)</strong>
-<strong style="color:#ffff80">부드러운 노란색 (강조)</strong>
+        // 중앙값 기준으로 X축 분할 (단순 버전)
+        // 실제 BVH는 SAH 기준으로 최적 축/위치를 찾음
+        float midX = (node.bounds.minX + node.bounds.maxX) / 2.0f;
 
-# Code Example
-``` cpp fold title:Cmd
-au.3dVisualize.Listeners 1
+        int mid = node.triangleStart + node.triangleCount / 2;
+
+        // 왼쪽 자식
+        BVHNode leftNode;
+        leftNode.triangleStart = node.triangleStart;
+        leftNode.triangleCount = mid - node.triangleStart;
+        leftNode.bounds = calcAABB(triangles, 
+                        leftNode.triangleStart, 
+                        leftNode.triangleCount);
+                        
+        nodes.push_back(leftNode);
+        nodes[nodeIdx].leftChild = static_cast<int>(nodes.size()) - 1;
+
+        // 오른쪽 자식
+        BVHNode rightNode;
+        rightNode.triangleStart = mid;
+        rightNode.triangleCount = node.triangleStart + 
+                                  node.triangleCount - mid;
+        rightNode.bounds = calcAABB(triangles, 
+                                    rightNode.triangleStart,
+                                    rightNode.triangleCount);
+        nodes.push_back(rightNode);
+        nodes[nodeIdx].rightChild = static_cast<int>(nodes.size()) - 1;
+
+        // 재귀 분할
+        subdivide(nodes[nodeIdx].leftChild, triangles);
+        subdivide(nodes[nodeIdx].rightChild, triangles);
+    }
+
+    // 레이 순회
+    bool traverse(int nodeIdx,
+                  float ox, float oy, float oz,
+                  float dx, float dy, float dz) const
+    {
+        const BVHNode& node = nodes[nodeIdx];
+
+        // 이 노드의 AABB 와 레이 교차 검사
+        if (!node.bounds.intersect(ox, oy, oz, dx, dy, dz))
+            return false;  // 박스 miss → 스킵
+
+        if (node.isLeaf())
+        {
+            // 리프 도달 → 실제 삼각형 교차 검사
+            // 예시: node.triangleStart ~ triangleStart+triangleCount 범위
+            // 실제 구현에서는 여기서 Möller–Trumbore 알고리즘 사용
+            return true;  // 간단히 hit 반환
+        }
+
+        // 자식 노드 재귀 탐색
+        bool hitLeft  = traverse(node.leftChild,  ox, oy, oz, dx, dy, dz);
+        bool hitRight = traverse(node.rightChild, ox, oy, oz, dx, dy, dz);
+
+        return hitLeft || hitRight;
+    }
+
+    // 삼각형 범위의 AABB 계산
+    AABB calcAABB(const std::vector<Triangle>& triangles,
+                  int start, int count)
+    {
+        // 간단히 전체 씬 범위 반환 (실제로는 버텍스 좌표로 계산)
+        return AABB{ 0, 0, 0, 10, 10, 10 };
+    }
+};
 ```
 
-``` cpp fold title:subject
-int a = 1;
-int b = 2;
-a + b 3;
-```
-
-
-# Callout Example
-> [!info] info
-> Contents
-
-> [!todo] todo
-> Contents
-
-> [!error] Title
-> Contents
-
-> [!question] Title
-> Contents
-
-> [!example] Title
-> Contents
-
-> [!tip] 팁 (보통 민트/연초록)
-> 내용을 입력하세요.
-
-> [!success] 성공 (보통 초록/민트)
-> 완료된 항목이나 긍정적인 내용을 넣기 좋습니다.
-
-> [!check] 체크 (success와 비슷함)
-> 확인이 필요한 내용에 사용하세요.
