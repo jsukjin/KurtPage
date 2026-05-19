@@ -287,94 +287,130 @@ if (det < 1e-6f)
 
 ---
 
+# 3. OBB
 
+- OOBB (Object Bounding Box) 
 
+![[algo_collision_OBB_example.webp]]
 
+- AABB : 항상 x,y,z 측에 정렬 -> 회전하면 box의 사이즈가 커짐
+- OBB : 오브젝트와 함께 회전 -> 항상 딱 맞는 박스 유지
 
+## 1. 구성 요소
 
+``` cpp
 
+strcut OBB )
+    Vector3f center;        //center point
+    Vector3f axes[3];       //로컬 x,y,z unit vector (회전 정보)
+    Vector3f halfExtents;   //각 축 방향 반절 크기
+}
 
+//eg) 45도 회전한 박스
+OBB box;
+box.center      = {5,0,0};               
+box.axes[0]     = {0.707, 0.707, 0};  //local x-axis (45도 회전)
+box.axes[1]     = {0,0,1};            //local y-axis
+box.axes[2]     = {0,0,1};            //local z-axis 
+box.halfExtents = {2,1,1};            
 
+```
 
+-  <strong style="color:#b3f594">SAT (Separating Axis Theorem)</strong>
+	- OBB 충돌 검사의 핵심 알고리즘
+	- 두 OBB 사이에 분리 축이 하나라도 존재하면 충돌 X 
+	- 3D 에서 검사할 축은 총 15개
+	- OBB A의 3개 축, OBB B의 3개축, A의 축 * B축의 조합 9개 (외적)
 
+## 2. 예제 코드
 
+``` cpp
+// 한 축에 두 OBB 를 투영해서 겹치는지 확인
+
+//axis = local x,y,z, axis (eg : box.axes[0], box, axes[1])
+bool overlapOnAxis(const OBB& a, const OBB& b, const Vector3f& axis)
+{
+    // A 의 반지름: 각 축을 검사 축에 투영한 합
+    float ra = fabsf(Vector3f::dot(a.axes[0], axis)) * a.halfExtents.x()
+             + fabsf(Vector3f::dot(a.axes[1], axis)) * a.halfExtents.y()
+             + fabsf(Vector3f::dot(a.axes[2], axis)) * a.halfExtents.z();
+
+    // B 의 반지름
+    float rb = fabsf(Vector3f::dot(b.axes[0], axis)) * b.halfExtents.x()
+             + fabsf(Vector3f::dot(b.axes[1], axis)) * b.halfExtents.y()
+             + fabsf(Vector3f::dot(b.axes[2], axis)) * b.halfExtents.z();
+
+    // 두 중심 사이 거리
+    float dist = fabsf(Vector3f::dot(b.center - a.center, axis));
+
+    // dist > ra + rb 이면 이 축에서 분리됨 → 충돌 없음
+    return dist <= ra + rb;
+}
+```
 
 ---
 
-<font color="#b3f594">1. 역할 분리</font>
-<font color="#b3f594">1. 역할 분리</font>
-<font color="#b3f594">1. 역할 분리</font>
-<font color="#b3f594">1. 역할 분리</font>
+## 3. 실전 코드
 
+``` cpp
+// 두 OBB 사이의 collision 검사
 
-들여쓰기
+bool OBBvsOBB(const OBB& a, const OBB& b)
+{
+    // 검사할 15개 축 목록
+    Vector3f axes[15];
 
-<details>
-  <summary>여기를 클릭해서 내용을 확인하세요 (제목)</summary>
-  <div markdown="1">
-    
-    이곳에 펼쳐질 내용을 작성합니다.
-    - 리스트도 가능하고
-    - **굵은 글씨**도 가능합니다.
+    // A 의 3개 축
+    axes[0] = a.axes[0];
+    axes[1] = a.axes[1];
+    axes[2] = a.axes[2];
 
-  </div>
-</details>
+    // B 의 3개 축
+    axes[3] = b.axes[0];
+    axes[4] = b.axes[1];
+    axes[5] = b.axes[2];
 
+    // A × B 외적 조합 9개
+    int idx = 6;
+    for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+        {
+            axes[idx] = Vector3f::cross(a.axes[i], b.axes[j]);
 
-%% 옵시디언에서만 보이는 주석 %%
+            // 외적이 0 에 가까우면 평행 → 스킵
+            if (axes[idx].length() < 1e-6f)
+                axes[idx] = axes[0]; // 임시 대체
+            else
+                axes[idx] = Vector3f::unitVector(axes[idx]);
 
+            ++idx;
+        }
 
-<font color="#2ecc71">초록색 텍스트</font>
-<font color="#3498db">파란색 텍스트</font>
-<font color="#ff4d4d">빨간색 텍스트</font>
-<font color="#ffa500">주황색 텍스트</font>
-<font color="#f1c40f">노란색 텍스트</font>
+    // 15개 축 중 하나라도 분리되면 → 충돌 없음
+    for (int i = 0; i < 15; ++i)
+    {
+        //overlapOnAxis 는 (에제코드 참고)
+        if (!overlapOnAxis(a, b, axes[i]))
+            return false; // 분리축 발견 → miss
+    }
 
-<font color="#b3f594">■ 이미지의 그 초록색 (연두)</font>
-<font color="#80dfff">■ 시원한 밝은 파란색</font>
-<font color="#ff6b6b">■ 예쁜 다홍빛 빨간색</font>
-<font color="#ffb15b">■ 질문하신 주황색</font>
-<font color="#ffff80">■ 눈 안 아픈 부드러운 노란색</font>
+    // 모든 축에서 겹침 → 충돌!
+    return true;
+}
 
-<strong style="color:#b3f594">연두색 (이미지 속 그 색상)</strong>
-<strong style="color:#80dfff">밝은 하늘색 (정보/참고)</strong>
-<strong style="color:#ff6b6b">다홍색 (주의/경고)</strong>
-<strong style="color:#ffb15b">주황색 (핵심 키워드)</strong>
-<strong style="color:#ffff80">부드러운 노란색 (강조)</strong>
-
-# Code Example
-``` cpp fold title:Cmd
-au.3dVisualize.Listeners 1
 ```
 
-``` cpp fold title:subject
-int a = 1;
-int b = 2;
-a + b 3;
-```
 
+> [!info] AABB / OBB / BVH 관계
+> BVH 내부 -> AABB 사용 (빠름, 정밀도 낮음)
+> 최종 검사 -> OBB or Triangle 사용 (느림, 정밀도 높음)
+> <br>
+>
+> Steam Audio
+> - BVH -> AABB 교차 -> 리프 노드 전달 -> Triangle 교차 
+> 
+>물리 충돌 (PhysX, Bullet)
+>- BVH -> AABB 1차 -> OBB 2차 -> 정밀 충돌
+>
 
-# Callout Example
-> [!info] info
-> Contents
-
-> [!todo] todo
-> Contents
-
-> [!error] Title
-> Contents
-
-> [!question] Title
-> Contents
-
-> [!example] Title
-> Contents
-
-> [!tip] 팁 (보통 민트/연초록)
-> 내용을 입력하세요.
-
-> [!success] 성공 (보통 초록/민트)
-> 완료된 항목이나 긍정적인 내용을 넣기 좋습니다.
-
-> [!check] 체크 (success와 비슷함)
-> 확인이 필요한 내용에 사용하세요.
+---
