@@ -1,5 +1,5 @@
 ---
-title: STL_shared_from_this
+title: STD_shared_from_this
 author: KurtJang
 tags:
   - Blog
@@ -8,7 +8,7 @@ tags:
   - "#STL"
 date: 2026-05-16
 draft: "False"
-description: STL std::memory 정리
+description: std::memory 정리
 ---
 
 ---

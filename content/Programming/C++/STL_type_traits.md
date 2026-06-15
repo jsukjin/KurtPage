@@ -8,28 +8,8 @@ tags:
   - "#STL"
 date: 2026-05-01
 draft: "False"
-description: "STL std::type_traits 에 대한 내용 정리 (C++ 11)"
+description: std::type_traits 에 대한 내용 정리 (C++ 11)
 ---
-<br>
-<strong><font color="#9fffa3">Table of Contents</font></strong>
-
-1. [is_convertible](#is_convertible)
-	1. [1. 파라미터](#1-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0)
-	2. [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-2. [enable_if](#enable_if)
-	1. [1. 파라미터](#1-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0)
-	2. [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-	3. [3. 실제 코드](#3-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
-3. [3. extent](#3-extent)
-	1. [1. 파라미터](#1-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0)
-	2. [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-	3. [3. 실제 코드](#3-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
-4. [4. remove_extent](#4-remove_extent)
-	1. [1. 구성 요소](#1-%EA%B5%AC%EC%84%B1-%EC%9A%94%EC%86%8C)
-	2. [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-	3. [3. 실제 코드](#3-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
-
-<br>
 
 ---
 
