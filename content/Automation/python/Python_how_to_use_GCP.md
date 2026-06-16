@@ -9,18 +9,6 @@ date: 2026-03-16
 draft: "False"
 description: "Goole Cloud Run을 활용한 python 실행"
 ---
-<br>
-<strong><font color="#9fffa3">Table of Contents</font></strong>
-
-1. [1. Google Cloud setup](#1-google-cloud-setup)
-2. [2. Python setup](#2-python-setup)
-3. [3. n8n](#3-n8n)
-	1. [1. Authorization](#1-authorization)
-4. [4. Test](#4-test)
-	1. [1. GET](#1-get)
-	2. [2. POST](#2-post)
-
-<br>
 
 ---
 # 1. Google Cloud setup

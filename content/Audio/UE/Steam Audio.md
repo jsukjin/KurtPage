@@ -5,12 +5,8 @@ tags:
   - Blog
 date: 2026-03-24
 draft: "true"
-description: "요약"
+description: Steam Audio 요약
 ---
-<font color="#68ff6e">Table of Contents</font>
-
-- [Code Example](#code-example)
-- [Callout Example](#callout-example)
 
 ---
 

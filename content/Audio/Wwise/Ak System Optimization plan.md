@@ -9,40 +9,6 @@ date: 2026-03-17
 draft: "true"
 description: "AkComponent optimization"
 ---
-<font color="#68ff6e">Table of Contents</font>
-
-- [Code Example](#code-example)
-- [Callout Example](#callout-example)
-
-1. [1. Introduction](#1.%20Introduction)
-		1. [목적](#%EB%AA%A9%EC%A0%81)
-2. [2. Problem Statement](#2.%20Problem%20Statement)
-	1. [3. 시스템 아키텍처 (System Architecture)](#3.%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98%20(System%20Architecture))
-	2. [3.1 설계 원칙](#3.1%20%EC%84%A4%EA%B3%84%20%EC%9B%90%EC%B9%99)
-	3. [3.2 주요 기능 (Key features)](#3.2%20%EC%A3%BC%EC%9A%94%20%EA%B8%B0%EB%8A%A5%20(Key%20features))
-	4. [1.2 멀티 플레이 환경에서의 성능 병목](#1.2%20%EB%A9%80%ED%8B%B0%20%ED%94%8C%EB%A0%88%EC%9D%B4%20%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C%EC%9D%98%20%EC%84%B1%EB%8A%A5%20%EB%B3%91%EB%AA%A9)
-3. [3. System Architecture](#3.%20System%20Architecture)
-4. [4. Implementation Details](#4.%20Implementation%20Details)
-5. [5. Testing & Validation](#5.%20Testing%20&%20Validation)
-6. [2. Ak system optimizaion plan](#2.%20Ak%20system%20optimizaion%20plan)
-	1. [1. Modular Audio Service](#1.%20Modular%20Audio%20Service)
-	2. [As-Is](#As-Is)
-	3. [To-Be](#To-Be)
-	4. [1. Shared RTPC Parameters](#1.%20Shared%20RTPC%20Parameters)
-	5. [As-Is](#As-Is)
-	6. [To-Be](#To-Be)
-7. [Code Example](#Code%20Example)
-8. [Callout Example](#Callout%20Example)
-	1. [Gemini said](#Gemini%20said)
-9. [📑 Managed AkComponent 기술 상세 설계서 (Draft)](#%F0%9F%93%91%20Managed%20AkComponent%20%EA%B8%B0%EC%88%A0%20%EC%83%81%EC%84%B8%20%EC%84%A4%EA%B3%84%EC%84%9C%20(Draft))
-	1. [1. 개요 (Introduction)](#1.%20%EA%B0%9C%EC%9A%94%20(Introduction))
-	2. [2. 현황 및 문제점 (Problem Statement)](#2.%20%ED%98%84%ED%99%A9%20%EB%B0%8F%20%EB%AC%B8%EC%A0%9C%EC%A0%90%20(Problem%20Statement))
-	3. [3. 시스템 아키텍처 (System Architecture)](#3.%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98%20(System%20Architecture))
-	4. [4. 구현 상세 (Implementation Details)](#4.%20%EA%B5%AC%ED%98%84%20%EC%83%81%EC%84%B8%20(Implementation%20Details))
-		1. [**4.1. 모듈별 오디오 서비스 설정 (To-Be)**](#**4.1.%20%EB%AA%A8%EB%93%88%EB%B3%84%20%EC%98%A4%EB%94%94%EC%98%A4%20%EC%84%9C%EB%B9%84%EC%8A%A4%20%EC%84%A4%EC%A0%95%20(To-Be)**)
-		2. [**4.2. 중앙 집중형 데이터 흐름 (Centralization)**](#**4.2.%20%EC%A4%91%EC%95%99%20%EC%A7%91%EC%A4%91%ED%98%95%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%ED%9D%90%EB%A6%84%20(Centralization)**)
-	5. [5. 테스트 및 검증 (Testing & Validation)](#5.%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EB%B0%8F%20%EA%B2%80%EC%A6%9D%20(Testing%20&%20Validation))
-
 
 ---
 

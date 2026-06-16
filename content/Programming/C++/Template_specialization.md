@@ -11,14 +11,6 @@ draft: "False"
 description: "C++ Template 특수화 (Template specialization) / 부분특수화 (Partial Specialization) 개념 정리"
 ---
 <br>
-<strong><font color="#9fffa3">Table of Contents</font></strong>
-
-1. [템플릿 특수화](#%ED%85%9C%ED%94%8C%EB%A6%BF-%ED%8A%B9%EC%88%98%ED%99%94)
-	1. [1. 사용이유](#1-%EC%82%AC%EC%9A%A9%EC%9D%B4%EC%9C%A0)
-	2. [2. 예제 코드](#2-%EC%98%88%EC%A0%9C-%EC%BD%94%EB%93%9C)
-	3. [2. 실제 코드](#2-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C)
-
-<br>
 
 ---
 

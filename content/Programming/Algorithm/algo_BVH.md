@@ -12,7 +12,6 @@ description: BVH (Bounding volume Hierarchy), Octree 분석
 ---
 
 ---
-
 # 1. BVH
 
 - 레이 트레이싱을 빠르게 만드는 tree 자료 구조
@@ -28,16 +27,15 @@ description: BVH (Bounding volume Hierarchy), Octree 분석
 ---
 ## 1.1 구성요소
 
-루트 노드 (전체 씬 AABB)
-    ├── 내부 노드 (왼쪽 절반 AABB)
-    │       ├── 리프 (삼각형 1~2)
-    │       └── 리프 (삼각형 3~4)
-    └── 내부 노드 (오른쪽 절반 AABB)
-            ├── 리프 (삼각형 5~6)
-            └── 리프 (삼각형 7~8)
-
+- 루트 노드 (전체 씬 AABB)
+	- 내부노드(왼쪽 절반 AABB)
+		- 리프 (삼각형 1~2)
+		- 리프 (삼각형 3~4)
+	- 내부노드(오른쪽 절반 AABB)
+		- 리프 (삼각형 5~6)
+		- 리프 (삼각형7~8)
+		
 ---
-
 ## 1.2 핵심 개념
 
 ### AABB

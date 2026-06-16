@@ -7,28 +7,8 @@ tags:
   - "#UE"
   - "#UEAudio"
 draft: "False"
+description: 자주쓰는 UE Audio debug Command 정리
 ---
-
->[!Info] Summary
->자주쓰는 UE Audio debug Command 정리
-
----
-<br>
-
-<strong><font color="#9fffa3">Table of Contents</font></strong>
-
-1. [1. InGame](#1-ingame)
-	1. [1. 3D Audio Debug](#1-3d-audio-debug)
-	2. [2. Listener Debug](#2-listener-debug)
-	3. [3. 3D Active sounds Debug](#3-3d-active-sounds-debug)
-	4. [4. Active Sounds Debug](#4-active-sounds-debug)
-	5. [5. Active Sounds Debug (log)](#5-active-sounds-debug-log)
-2. [2. Mix](#2-mix)
-	1. [1. SoundModulation](#1-soundmodulation)
-3. [3. Profiling](#3-profiling)
-4. [4. Links](#4-links)
-
-<br>
 
 ---
 

@@ -6,29 +6,8 @@ tags:
   - n8n
 date: 2026-01-02
 draft: "False"
+description: setup guide for self-hosted n8n
 ---
-
-> [!NOTE] Summary
-> setup guide for self-hosted n8n
-
----
-<br>
-<strong><font color="#9fffa3">Table of Contents</font></strong>
-
-1. [1. Docker desktop 설치](#1-docker-desktop-%EC%84%A4%EC%B9%98)
-2. [2. Git repo 받기](#2-git-repo-%EB%B0%9B%EA%B8%B0)
-3. [3. ngrok 설치](#3-ngrok-%EC%84%A4%EC%B9%98)
-	1. [1. chocolatey](#1-chocolatey)
-	2. [2.ngrok](#2ngrok)
-	3. [3. env 파일 설정](#3-env-%ED%8C%8C%EC%9D%BC-%EC%84%A4%EC%A0%95)
-4. [3. n8n config 설정](#3-n8n-config-%EC%84%A4%EC%A0%95)
-	1. [1. config 파일 수정](#1-config-%ED%8C%8C%EC%9D%BC-%EC%88%98%EC%A0%95)
-	2. [2. env 파일 수정](#2-env-%ED%8C%8C%EC%9D%BC-%EC%88%98%EC%A0%95)
-5. [5. n8n 실행](#5-n8n-%EC%8B%A4%ED%96%89)
-6. [6. 결과](#6-%EA%B2%B0%EA%B3%BC)
-7. [6. docker cmd](#6-docker-cmd)
-
-<br>
 
 ---
 # 1. Docker desktop 설치

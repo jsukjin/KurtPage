@@ -8,26 +8,12 @@ tags:
   - "#Docker"
 date: 2026-02-24
 draft: "False"
+description: python을 docker에 올리고 이를 n8n(self-hosted) 에서 Http request로 실행하는 방법
 ---
 
 > [!info]  요약
 > python을 docker에 올리고 이를 n8n(self-hosted) 에서 Http request로 실행하는 방법
 > 
-
----
-<br>
-<strong><font color="#9fffa3">Table of Contents</font></strong>
-
-1. [1. Docker setup](#1-docker-setup)
-	1. [DockerFile](#dockerfile)
-	2. [docker-compose.yml](#docker-composeyml)
-2. [2. Python setup](#2-python-setup)
-	1. [main.py](#mainpy)
-	2. [test.py](#testpy)
-3. [3. Test](#3-test)
-
-
-<br>
 
 ---
 # 1. Docker setup
