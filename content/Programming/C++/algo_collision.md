@@ -13,135 +13,61 @@ description: collision 관련 algorithm 분석
 
 ---
 
-# 1. Slab method
+# 1. Intorduction
 
-- <strong style="color:#b3f594">Ray가 AABB 박스에 닿는지 확인하는 알고리즘</strong>
-- 슬랩(Slab)은 두 평행 평면 사이의 공간이며 X,Y,Z 3쌍의 슬랩으루 구성됨
+대표적인 Ray algorithm은 다음과 같다
 
+<strong style="color:#b3f594">1. Moller-Trumbore</strong>
+- <font color="#ffb15b">대상 : Ray - Triangle</font>
+- 저장소 불필요, 행렬식 없음
+- barycentric(u,v) 동시 산출
+- 외적 2회  + 내적 3회
+- 삼각형 1개씩 순차검사
 
-![[algo_collision_AABB.webp]]
+<strong style="color:#b3f594">2. William slab test</strong>
+- <font color="#ffb15b">대상 : Ray - AABB</font>
+- branchless, 나눗셈 없음
+- 부호 배열로 near/far 선택
+- BVH Treversal  hot pass 최적
 
-- `tMin < tMax` 이면 교차
-- `tMin`(노란점) = 박스 진입, `tMax`(초록점) = 박스 탈출
-- <strong style="color:#ffb15b">Ray (파란색) 은 아래의 조건일때 구간 겹침 없음</strong>
-	-  `tMin` > `tMax` 
+<strong style="color:#b3f594">3. Quadratic(구)</strong>
+- <font color="#ffb15b">대상 : Ray - Sphere</font>
+- 수식 단순, 구현 5종
+- 판별식 D로 miss 조기 탈출
+- sqrt() 비용발생
 
-## 1.1 구성
-
-<strong style="color:#b3f594">교차 예제</strong>
-
- ![[algo_collision_AABB_02.webp]]
-- `txMin` = x벽 통과 시점 , `tyMin` = Y벽 통과 시점
-- `tMin = max(txMin, tyMin)` <strong style="color:#ffb15b">둘 다 통과한 시점 (더 늦은 것)</strong>
-
-``` cpp
-//파란 레이 miss 예제
+<strong style="color:#b3f594">4. Woop (precomp)</strong>
+- <font color="#ffb15b">대상 : Ray - Triangle</font>
+- 삼각형당 행렬 사전 계산
+- runtime 내적3회
+- SIMD 패킹 최적화
+- 삼각형당 48 bytes 추가 저장
+- EMbree 내부 사용
  
-txMin = 2; // x-slap에 t=2 진입
-tyMin = 1; // y-slap에 t=1 진입
-txMax = 6; // x-slap에 t=6 탈출
-tyMax = 10; // y-slap에 t=1 에 이미 탈출 
+<strong style="color:#b3f594">5. Piucker coord</strong>
+- <font color="#ffb15b">대상 : Ray - Triangle</font>
+- winding order 동시 판별
+- 일관된 부호로 분기 제거
+- 삼각형당 6-coord 사전 계산
+- **현재 거의 사용 안함**
 
-tMin = max(txMin, tyMin) = max(2,1) = 2
-tMax = min(txMax, tyMax) = min (6, 10) = 6
+<strong style="color:#b3f594">6. Badouel(bary)</strong>
+- <font color="#ffb15b">대상 : Ray - Triangle</font>
+- 평면 교점 후 2D projection
+- 구현 직관적
+- 나눗셈 포함, 수치 불안정
+- **Moller 보다 연산 많음 (old version)**
 
-tMin(2) <= tMax(6) // 교차
-```
-
-<strong style="color:#b3f594">miss 예제</strong>
-
-![[algo_collision_AABB_03_miss.webp]]
-
-``` cpp
-// 10,10에 100 * 100 크기의 박스에 대한 ray test
-txMin = 10;
-xxMax = 110;
-tyMin = 0;   //겹침 없음
-tyMax = 0;   //겹침 없음
-
-tMin = max(txMin, tyMin) = max(10, 0) = 10
-tMax = min(txMax, tyMax) = min(110, 0) = 0
-
-tmin(10) >= tmax(0) // miss
-```
-
-
-## 1.2 예제 코드
-
-``` cpp
-bool rayAABBIntersect(const Vector3f& origin,    //ray start point
-                      const Vector3f& direction, //ray direction
-                      const Vector3f& boxMin,    //AABB min point
-                      const Vector3f& boxMax)    //AABB max point
-  {
-      //tMin = ray가 박스에 가장 늦게 진입하는 t
-      //tMax = ray가 박스에 가장 빨리 탈출하는 t
-      float tMin = -FLT_MAX;
-      float tMax = FLT_MAX;
-      
-      for (int i = 0; i < 3; ++i)
-      {
-          if (fabsf(direction[i]) <= 1e-6f)
-          {
-              //ray 방향이 이 축과 평행한 경우
-              //eg) : direction.x = 0 //x 축 방향으로 안 움직임
-              //origin이 slap 밖이면 교체 불가
-              //eg) origion.x = 1, boxMin = 2 이면 slap 왼쪽에 있음 (miss)
-              if (origin[i] < boxMin[1] || origion[i] > boxMax[i])
-                  return false;
-          }
-          else
-          {
-              //ray가 이 축의 min 평면에 닿는 t
-              //P(t) = origion + t * direction
-              //origion +t * direction = boxMin
-              //t = (boxMin - origin) / direction
-              //eg) origion.x = 0, dir.x = 1, boxMin.x = 2 
-              //    t1 = (2-0)/1 = 2
-              float t1 = (boxMin[i] - origin[i]) / direction[i];
-              
-              //레이가 이축의 max 평면에 닿는 t
-              //eg) origion.x= 0 , dir.x =1, boxMax.x = 6
-              //    t2 = (6-0)/1 = 6.0
-              float t2 = (boxMax[i] - origin[i]) / direction[i];
-              
-              //direction이 음수면 t1 > t2 가 될 수 있음
-              //eg) dirx.1 = -1, origion.x = 8
-              //t1 = (2-8)/(-1) = 6  // 탈출점
-              //t2 = (6-8)/(-1) = 2  // 진입점
-              if (t1 > t2)
-                  std::swap(t1,t2);
-              
-              //tMin = 세 축 중 가장 늦게 진입하는 t
-              //박스에 완전히 들어오는 시점
-              //eg) txMin = 2, tyMin = 2.5 -> tMax = 2.5
-              tMin = std::max(tMin, t1);
-              
-              //tMAx = 세 축중 가장 빨리 탈출하는 t
-              //박스에 완전히 탈출하는 시점
-              //eg) txMax = 6, tyMax = 7.5 -> tMax = 6
-              tMax = std::min(tMax, t2);
-              
-              if (tMin > tMAx)
-                  return false;
-          }
-      }
-      
-      //tMax < 0 이면 박스 전체가 레이 뒤쪽에 있음 (miss)
-      //eg) tMin = 6, tMax = -2, //레이 압족에 박스 없음
-      return tMax >= 0.0f;
-  }
-```
 
 ---
+# 2. Ray - Triangle
 
-# 2. Möller–Trumbore
+## A.  Möller–Trumbore
 
-- <strong style="color:#b3f594">Ray 와 Triangle 교차 테스트 (Möller–Trumbore 알고리즘)</strong>
 
 ![[algo_collision_triangle.webp]]
 
-## 1. 구성
+### 1. 구성
 
  1. Ray 위의 점 P를 삼각형의 <font color="#ffa500">무게중심 좌표</font>로 표현
  
@@ -165,7 +91,7 @@ u >= 0, v >= 0, u + v <= 1
 ```
 
 ---
-## 2. 예제 코드
+### 2. 예제 코드
 
 ![[algo_collision_triangle_example.webp|300]]
 
@@ -288,16 +214,663 @@ if (det < 1e-6f)
 
 ---
 
-# 3. OBB overlap
+# 3. Ray - Box
 
-- OOBB (Object Bounding Box) 
+## A. Slab method
+
+- <strong style="color:#b3f594">Ray가 AABB 박스에 닿는지 확인하는 알고리즘</strong>
+- 슬랩(Slab)은 두 평행 평면 사이의 공간이며 X,Y,Z 3쌍의 슬랩으루 구성됨
+
+
+![[algo_collision_AABB.webp]]
+
+- `tMin < tMax` 이면 교차
+- `tMin`(노란점) = 박스 진입, `tMax`(초록점) = 박스 탈출
+- <strong style="color:#ffb15b">Ray (파란색) 은 아래의 조건일때 구간 겹침 없음</strong>
+	-  `tMin` > `tMax` 
+
+### 1. 구성
+
+<strong style="color:#b3f594">교차 예제</strong>
+
+ ![[algo_collision_AABB_02.webp]]
+- `txMin` = x벽 통과 시점 , `tyMin` = Y벽 통과 시점
+- `tMin = max(txMin, tyMin)` <strong style="color:#ffb15b">둘 다 통과한 시점 (더 늦은 것)</strong>
+
+``` cpp
+//파란 레이 miss 예제
+ 
+txMin = 2; // x-slap에 t=2 진입
+tyMin = 1; // y-slap에 t=1 진입
+txMax = 6; // x-slap에 t=6 탈출
+tyMax = 10; // y-slap에 t=1 에 이미 탈출 
+
+tMin = max(txMin, tyMin) = max(2,1) = 2
+tMax = min(txMax, tyMax) = min (6, 10) = 6
+
+tMin(2) <= tMax(6) // 교차
+```
+
+<strong style="color:#b3f594">miss 예제</strong>
+
+![[algo_collision_AABB_03_miss.webp]]
+
+``` cpp
+// 10,10에 100 * 100 크기의 박스에 대한 ray test
+txMin = 10;
+xxMax = 110;
+tyMin = 0;   //겹침 없음
+tyMax = 0;   //겹침 없음
+
+tMin = max(txMin, tyMin) = max(10, 0) = 10
+tMax = min(txMax, tyMax) = min(110, 0) = 0
+
+tmin(10) >= tmax(0) // miss
+```
+
+
+### 2. 예제 코드
+
+``` cpp
+bool rayAABBIntersect(const Vector3f& origin,    //ray start point
+                      const Vector3f& direction, //ray direction
+                      const Vector3f& boxMin,    //AABB min point
+                      const Vector3f& boxMax)    //AABB max point
+  {
+      //tMin = ray가 박스에 가장 늦게 진입하는 t
+      //tMax = ray가 박스에 가장 빨리 탈출하는 t
+      float tMin = -FLT_MAX;
+      float tMax = FLT_MAX;
+      
+      for (int i = 0; i < 3; ++i)
+      {
+          if (fabsf(direction[i]) <= 1e-6f)
+          {
+              //ray 방향이 이 축과 평행한 경우
+              //eg) : direction.x = 0 //x 축 방향으로 안 움직임
+              //origin이 slap 밖이면 교체 불가
+              //eg) origion.x = 1, boxMin = 2 이면 slap 왼쪽에 있음 (miss)
+              if (origin[i] < boxMin[1] || origion[i] > boxMax[i])
+                  return false;
+          }
+          else
+          {
+              //ray가 이 축의 min 평면에 닿는 t
+              //P(t) = origion + t * direction
+              //origion +t * direction = boxMin
+              //t = (boxMin - origin) / direction
+              //eg) origion.x = 0, dir.x = 1, boxMin.x = 2 
+              //    t1 = (2-0)/1 = 2
+              float t1 = (boxMin[i] - origin[i]) / direction[i];
+              
+              //레이가 이축의 max 평면에 닿는 t
+              //eg) origion.x= 0 , dir.x =1, boxMax.x = 6
+              //    t2 = (6-0)/1 = 6.0
+              float t2 = (boxMax[i] - origin[i]) / direction[i];
+              
+              //direction이 음수면 t1 > t2 가 될 수 있음
+              //eg) dirx.1 = -1, origion.x = 8
+              //t1 = (2-8)/(-1) = 6  // 탈출점
+              //t2 = (6-8)/(-1) = 2  // 진입점
+              if (t1 > t2)
+                  std::swap(t1,t2);
+              
+              //tMin = 세 축 중 가장 늦게 진입하는 t
+              //박스에 완전히 들어오는 시점
+              //eg) txMin = 2, tyMin = 2.5 -> tMax = 2.5
+              tMin = std::max(tMin, t1);
+              
+              //tMAx = 세 축중 가장 빨리 탈출하는 t
+              //박스에 완전히 탈출하는 시점
+              //eg) txMax = 6, tyMax = 7.5 -> tMax = 6
+              tMax = std::min(tMax, t2);
+              
+              if (tMin > tMAx)
+                  return false;
+          }
+      }
+      
+      //tMax < 0 이면 박스 전체가 레이 뒤쪽에 있음 (miss)
+      //eg) tMin = 6, tMax = -2, //레이 압족에 박스 없음
+      return tMax >= 0.0f;
+  }
+```
+
+## B. Ray - OBB
+
+- `slap test` 는 SAT(separating Axis Theorem)를 축이 고정된 케이스에 특화
+- `Ray-OBB` 는 그것을 OBB로 바꾼 형태 (구조가 거의 동일)
+
+``` cpp
+
+// OBB 정의 
+struct OBB { Vec3 center; 
+Vec3 axes[3]; // 단위벡터, 서로 직교 
+float halfExtents[3]; }; 
+
+bool rayOBB(const Ray& r, const OBB& obb, float& tOut) 
+{ 
+    Vec3 d = r.origin - obb.center; 
+    float tmin = -INF, tmax = +INF; 
+    for (int i = 0; i < 3; i++) 
+    { 
+        float e = dot(obb.axes[i], d); // origin을 축에 투영 
+        float f = dot(obb.axes[i], r.dir); // dir을 축에 투영 
+        if (fabsf(f) > EPS) 
+        { 
+            float t1 = (e + obb.halfExtents[i]) / f; // near slab 
+            float t2 = (e - obb.halfExtents[i]) / f; // far slab 
+            
+            if (t1 > t2) swap(t1, t2); 
+            tmin = max(tmin, t1); 
+            tmax = min(tmax, t2); 
+            
+            if (tmin > tmax) return false; // 조기 탈출 
+		} 
+		else if (-e - obb.halfExtents[i] > 0 || -e + obb.halfExtents[i] < 0) 
+		    return false; // 레이가 이 슬랩에 평행 + 밖에 있음
+		}
+	}
+	
+	tOut = (tmin > 0) ? tmin : tmax; 
+	return tmax >= 0;
+}
+
+// 한 축에 대해 레이의 투영 구간과 OBB 투영 구간 겹침 검사 
+auto slabOnAxis = [&](Vec3 axis) -> bool 
+{ 
+    float e = dot(axis, obb.center - r.origin); 
+    float f = dot(axis, r.dir); 
+    float h = dot(axis, obb.axes[0]) * obb.he[0] // OBB를 축에 투영 
+            + dot(axis, obb.axes[1]) * obb.he[1] 
+            + dot(axis, obb.axes[2]) * obb.he[2]; 
+    return fabsf(e) <= h + fabsf(f) * tmax; }; 
+    
+// OBB의 3 face 축 검사 (= 방법1과 동일 결과) 
+for (int i=0;i<3;i++)
+{
+    if (!slabOnAxis(obb.axes[i])) return false;  
+} 
+
+// 레이 dir × OBB 축 cross 3개 추가 검사 (얇은 슬랩 감지) 
+for (int i=0;i<3;i++) 
+{
+    if (!slabOnAxis(cross(r.dir, obb.axes[i])))
+    {
+        return false;
+    }  
+}
+
+return true;
+
+
+```
+
+
+---
+
+
+# 4. Ray - Sphere
+
+## A. Quadratic Equation
+
+### 1. 구성
+
+광선과 구가 만나는 점을 찾으려면, **광선의 방정식**과 **구의 방정식**을 연립해야 합니다. 
+이 연립하는 과정에서 자연스럽게 2차 방정식이 만들어집니다.
+
+
+<strong style="color:#b3f594">1. Ray Equation</strong>
+
+- 시작점($P_0$), 벡터($D$), 시간(t)
+
+$$P(t) = P_0 + tD \quad (t \ge 0)$$
+
+
+<strong style="color:#b3f594">2. Sphere Equation</strong>
+
+- 중심(C), 반지름(r)인 구 표면에 임의의 점 P는 다음 조건을 만족한다
+
+$$(P - C) \cdot (P - C) = r^2$$
+
+
+<strong style="color:#b3f594">3. 연립하여 2차 방정식 만들기</strong>
+
+- 광선이 구와 만나는 점의 위치  $P(t)$가 구의 방정식도 만족하는 순간
+- 구의 방정식에 $P(t)$ 대입
+$$((P_0 + tD) - C) \cdot ((P_0 + tD) - C) = r^2$$
+
+- 광선의 시작점에서 구의 중심을 뺀 변위 벡터를 $V = P_0 - C$라고 정의
+
+$$(tD + V) \cdot (tD + V) = r^2$$
+$$t^2(D \cdot D) + 2t(D \cdot V) + (V \cdot V) - r^2 = 0$$
+
+- 이 식은 우리가 잘 아는 $at^2 + bt + c = 0$ 형태의 **$t$에 대한 2차 방정식**입니다!
+ 
+$$at^2 + bt + c = 0$$
+
+- $a = D \cdot D$ (만약 방향 벡터 $D$가 정규화(내적값이 1)되어 있다면 $a = 1$이 됩니다.)
+    
+- $b = 2(D \cdot V)$
+    
+- $c = (V \cdot V) - r^2$
+
+
+
+<strong style="color:#b3f594">4. 교차여부 판단</strong>
+
+이제 근의 공식에 쓰이는 판별식 $B^2 - 4ac$ (여기서는 $b^2 - 4ac$)를 사용해 구와 광선의 관계를 
+알 수 있습니다.
+
+- **판별식 < 0**: 실근이 없음 $\rightarrow$ 광선이 구를 **비껴감** (교점 0개)
+    
+- **판별식 = 0**: 중근 $\rightarrow$ 광선이 구의 표면에 **접함** (교점 1개)
+    
+- **판별식 > 0**: 서로 다른 두 실근 $\rightarrow$ 광선이 구를 **뚫고 지나감** (교점 2개)
+    
+
+교점이 있을 때, 근의 공식으로 구한 $t$ 값 중  <font color="#ffa500">더 작고 0보다 큰 값 </font> 이 광선이 
+구와 처음 부딪히는 실제 지점이 됩니다.
+
+    
+---
+
+### 2. 예제 코드
+
+``` cpp
+#include <iostream>
+#include <cmath>
+
+// 3차원 벡터 구조체
+struct Vector3 {
+    float x, y, z;
+
+    Vector3 operator+(const Vector3& v) const 
+    { 
+        return {x + v.x, y + v.y, z + v.z}; 
+    }
+    Vector3 operator-(const Vector3& v) const 
+    { 
+        return 
+	{x - v.x, y - v.y, z - v.z}; }
+	
+    Vector3 operator*(float s) const 
+    { 
+        return {x * s, y * s, z * s}; 
+    }
+    
+    // 내적 (Dot Product)
+    float dot(const Vector3& v) const 
+    {
+        return x * v.x + y * v.y + z * v.z;
+    }
+};
+
+// 광선 구조체
+struct Ray {
+    Vector3 origin;    // 시작점 (P0)
+    Vector3 direction; // 방향 벡터 (D) - 정규화되었다고 가정
+};
+
+// 구 구조체
+struct Sphere {
+    Vector3 center;    // 중심 (C)
+    float radius;      // 반지름 (r)
+};
+
+// 교차 검사 함수
+bool intersectRaySphere(const Ray& ray, const Sphere& sphere, float& t_hit) 
+{
+    Vector3 V = ray.origin - sphere.center; // P0 - C
+
+    // 2차 방정식의 계수들 (방향 벡터 ray.direction이 정규화되어 있어 a = 1)
+    float a = ray.direction.dot(ray.direction); 
+    float b = 2.0f * ray.direction.dot(V);
+    float c = V.dot(V) - (sphere.radius * sphere.radius);
+
+    // 판별식 계산
+    // 근의 공식 b^2 - 4ac
+    float discriminant = b * b - 4.0f * a * c;
+
+    // 판별식이 0보다 작으면 만나지 않음
+    if (discriminant < 0.0f) 
+    {
+        return false;
+    }
+
+    // 근의 공식을 사용하여 t 구하기
+    // 광선이 나아가는 방향이므로, 둘 중 더 가까운(작은) 앞쪽 교점을 찾음
+    // 근의 공식
+    // t = (-b +- sqrt(b^2 -4ac)) / 2a
+    float t1 = (-b - std::sqrt(discriminant)) / (2.0f * a);
+    float t2 = (-b + std::sqrt(discriminant)) / (2.0f * a);
+
+    // t는 무조건 0 이상이어야 함 (광선 진행 방향의 앞쪽만 유효)
+    if (t1 >= 0.0f) 
+    {
+        t_hit = t1;
+        return true;
+    }
+    if (t2 >= 0.0f) 
+    {
+        t_hit = t2;
+        return true;
+    }
+
+    // 구가 광선 뒤쪽에 있는 경우
+    return false;
+}
+
+int main() {
+    // 원점에 위치하고 반지름이 2인 구
+    Sphere sphere = { {0.0f, 0.0f, 0.0f}, 2.0f };
+
+    // (0, 0, 5)에서 시작해 구 중심 방향(0, 0, -1)으로 쏘는 광선
+    Ray ray = { {0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, -1.0f} };
+
+    float t;
+    if (intersectRaySphere(ray, sphere, t)) 
+    {
+        std::cout << "구체와 충돌했습니다! 충돌 거리(t): " << t << std::endl;
+        Vector3 hitPoint = ray.origin + ray.direction * t;
+        std::cout << "충돌 좌표: (" << hitPoint.x << ", " << hitPoint.y << ",
+        " << hitPoint.z << ")" << std::endl;
+    } 
+    else 
+    {
+        std::cout << "충돌하지 않았습니다." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+
+---
+
+
+# 4. Overlap
+
+## A. AABB vs Sphere
+
+### 1. 원리
+
+구의 중심 좌표를 Box의 min/max 범위 안으로 구겨 넣으면 (clamp) 
+그 지점이 바로 <strong style="color:#ffb15b">Box 위에서 구체 줌심과 가장 가까운 점 </strong>
+
+
+1. 구체의 중심(C)에서 가장 가까운점 P를 구한다
+
+	- $P.x = \max(\text{Box.Min.x}, \min(C.x, \text{Box.Max.x}))$
+	- $P.y = \max(\text{Box.Min.y}, \min(C.y, \text{Box.Max.y}))$
+	- $P.z = \max(\text{Box.Min.z}, \min(C.z, \text{Box.Max.z}))$
+
+2. 구체의 중심(C)와 찾은 점(P) 사이의 거리의 제곱을 구한다
+3. 그 값이 반지름의 제곱(r^2)보다 작거나 같다면 Overlap
+
+
+### 2. 예제 코드
+
+``` cpp
+struct AABB { Vector3 min; Vector3 max; }; 
+struct Sphere { Vector3 center; float radius; }; bool 
+
+bool checkOverlapAABBSphere(const AABB& box, const Sphere& sphere) 
+{ 
+    // 1. Box 위에서 구체 중심과 가장 가까운 점(Closest Point) 찾기 
+    float closestX = std::max(box.min.x, 
+                              std::min(sphere.center.x, box.max.x)); 
+    float closestY = std::max(box.min.y, 
+                              std::min(sphere.center.y, box.max.y)); 
+    float closestZ = std::max(box.min.z, 
+                              std::min(sphere.center.z, box.max.z)); 
+    
+    // 2. 구체 중심과 Closest Point 간의 거리 제곱 계산 
+    float distanceSq = (closestX - sphere.center.x) * 
+                       (closestX - sphere.center.x) + 
+                       (closestY - sphere.center.y) * 
+                       (closestY - sphere.center.y) + 
+                       (closestZ - sphere.center.z) * 
+                       (closestZ - sphere.center.z); 
+                       
+   // 3. 반지름 제곱과 비교 
+   return distanceSq <= (sphere.radius * sphere.radius);
+}
+```
+
+---
+
+
+## B. OBB vs Sphere
+
+### 1. 원리
+
+회전된 상자(Oriented Bounding Box)와 Sphere의 Overlap 체크 역시 AABB와 동일하게
+<strong style="color:#ffb15b">Box 위에서 구체 줌심과 가장 가까운 점 </strong>을 찾는것이 핵심
+
+
+<strong style="color:#b3f594">1. Local Space 변환</strong>
+
+OBB는 일반적으로 다음과 같은 정보로 정의
+- Center : 상자의 월드 중심점
+- Extents : 상자의 절반 크디 (중시->각 면까지의 거리)
+- Axes : 상자가 바라보는 방향을 나타내는 vector (normalized)
+
+<strong style="color:#b3f594">2. 구체 중심에서 상대 vector 구하기</strong>
+
+먼저 구체의 월드 중심점 $C_{sphere}$에서 OBB의 중심점 $C_{box}$를 빼서 
+상자 중심 기준의 상대 위치 벡터 $V$를 구합니다.
+
+$$V = C_{sphere} - C_{box}$$
+
+<strong style="color:#b3f594">3. Obb의 로컬 축으로 projection</strong>
+
+상대 벡터 $V$를 OBB의 세 가지 로컬 방향 축($U_x, U_y, U_z$)에 각각 내적(Dot Product)합니다. 
+이렇게 하면 구체의 중심이 상자의 로컬 좌표계 기준으로 어디에 와있는지 
+좌표 값($L_x, L_y, L_z$)이 나옵니다.
+
+$$L_x = V \cdot U_x, \quad L_y = V \cdot U_y, \quad L_z = V \cdot U_z$$
+
+
+<strong style="color:#b3f594">3. Local Space에서 Clamping 및 거리 비교</strong>
+
+이제 상자의 절반 크기(Extents)인 `[-Extent, +Extent]` 범위를 사용해 
+AABB 때와 똑같이 값을 제한해 줍니다.
+
+- $P_{local}.x = \max(-e_x, \min(L_x, e_x))$    
+- $P_{local}.y = \max(-e_y, \min(L_y, e_y))$
+- $P_{local}.z = \max(-e_z, \min(L_z, e_z))$
+    
+로컬 공간 상에서의 구체 중심 $L$과 가장 가까운 점 $P_{local}$ 사이의 
+**거리 제곱**을 구해 반지름 제곱($r^2$)보다 작으면 충돌입니다!
+
+### 2. 예제 코드
+
+앞의 AABB vs Sphere코드와 비교해 보면 Dot 연산을 통해 로컬 좌표로 변환하는
+과정만 추가된 것을 볼 수 있다
+
+``` cpp
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+
+struct Vector3 {
+    float x, y, z;
+    Vector3 operator-(const Vector3& v) const 
+    { 
+        return {x - v.x, y - v.y, z - v.z}; 
+    }
+    
+    float dot(const Vector3& v) const
+    { 
+        return x * v.x + y * v.y + z * v.z; 
+    }
+};
+
+// 회전된 상자 (OBB) 구조체
+struct OBB {
+    Vector3 center;       // 상자의 월드 중심점
+    Vector3 extents;      // 상자의 절반 크기 (가로, 세로, 높이의 절반)
+    Vector3 axes[3];      // 상자의 회전 방향을 나타내는 3개의 축 (정규화 필수)
+};
+
+struct Sphere {
+    Vector3 center;
+    float radius;
+};
+
+// OBB와 Sphere 간의 Overlap 체크 함수
+bool checkOverlapOBBSphere(const OBB& box, const Sphere& sphere) 
+{
+    // 1. 구체 중심에서 OBB 중심을 향하는 상대 변위 벡터 계산
+    Vector3 V = sphere.center - box.center;
+
+    // 로컬 공간에서 가장 가까운 점을 저장할 벡터
+    Vector3 closestPointLocal = {0.0f, 0.0f, 0.0f};
+    // 로컬 공간에서의 구체 중심 좌표를 저장할 벡터
+    Vector3 sphereProj = {0.0f, 0.0f, 0.0f};
+
+    // 2. OBB의 3개 축(X, Y, Z)에 대해 각각 투영 및 Clamping 진행
+    // X축
+    sphereProj.x = V.dot(box.axes[0]);
+    closestPointLocal.x = std::max(-box.extents.x, 
+                                  std::min(sphereProj.x, box.extents.x));
+
+    // Y축
+    sphereProj.y = V.dot(box.axes[1]);
+    closestPointLocal.y = std::max(-box.extents.y, 
+                                   std::min(sphereProj.y, box.extents.y));
+
+    // Z축
+    sphereProj.z = V.dot(box.axes[2]);
+    closestPointLocal.z = std::max(-box.extents.z, 
+                                    std::min(sphereProj.z, box.extents.z));
+
+    // 3. 로컬 공간에서의 거리 제곱 계산
+    float distanceSq = (closestPointLocal.x - sphereProj.x) * 
+                       (closestPointLocal.x - sphereProj.x) +
+                       (closestPointLocal.y - sphereProj.y) *
+                       (closestPointLocal.y - sphereProj.y) +
+                       (closestPointLocal.z - sphereProj.z) *
+                       (closestPointLocal.z - sphereProj.z);
+
+    // 반지름 제곱과 비교하여 결과 반환
+    return distanceSq <= (sphere.radius * sphere.radius);
+}
+
+int main() 
+{
+    // 45도 회전된 상자 정의 예시 (단순화를 위해 축만 수동 정의)
+    OBB box;
+    box.center = {0.0f, 0.0f, 0.0f};
+    box.extents = {1.0f, 1.0f, 1.0f}; // 2x2x2 크기의 상자
+    box.axes[0] = {0.707f, 0.707f, 0.0f};  // X축이 45도 회전됨
+    box.axes[1] = {-0.707f, 0.707f, 0.0f}; // Y축
+    box.axes[2] = {0.0f, 0.0f, 1.0f};       // Z축
+
+    // 약간 비껴간 위치에 있는 구체
+    Sphere sphere = { {1.2f, 1.2f, 0.0f}, 0.5f };
+
+    if (checkOverlapOBBSphere(box, sphere)) 
+    {
+        std::cout << "OBB와 구체가 충돌(Overlap) 상태입니다." << std::endl;
+    } 
+    else 
+    {
+        std::cout << "충돌하지 않았습니다." << std::endl;
+    }
+
+    return 0;
+}
+
+```
+
+---
+
+## C. AABB vs AABB
+
+### 1. 원리
+
+"두 상자가 겹치지 않는 경우"를 생각해보면 된다
+<strong style="color:#ffb15b">x,y,z 축 단 하나라도 서로 공간이 떠 있다면(분리) 2 상자는 서로 만날수 없다</strong>
+
+하나의 축(예: X축)에서 상자 A와 상자 B가 겹치려면 다음 두 조건이 **동시에** 만족해야 합니다.
+
+1. A의 최소 좌표가 B의 최대 좌표보다 작거나 같아야 함 ($A.min \le B.max$)    
+2. A의 최대 좌표가 B의 최소 좌표보다 크거나 같아야 함 ($A.max \ge B.min$)
+    
+이 조건이 X, Y, Z축 모두에서 만족하면 두 AABB는 Overlap 상태입니다.
+
+### 2. 예제 코드
+
+``` cpp
+#include <iostream>
+
+struct Vector3 {
+    float x, y, z;
+};
+
+// AABB 구조체 (최솟값점과 최댓값점으로 정의)
+struct AABB {
+    Vector3 min;
+    Vector3 max;
+};
+
+// AABB vs AABB Overlap 체크 함수
+bool checkOverlapAABBAABB(const AABB& a, const AABB& b) {
+    // X축 검사: 한 상자의 min이 다른 상자의 max보다 크면 절대 겹칠 수 없음
+    if (a.min.x > b.max.x || a.max.x < b.min.x) return false;
+
+    // Y축 검사
+    if (a.min.y > b.max.y || a.max.y < b.min.y) return false;
+
+    // Z축 검사
+    if (a.min.z > b.max.z || a.max.z < b.min.z) return false;
+
+    // 세 축 모두에서 겹쳤다면 충돌 상태임
+    return true;
+}
+
+int main() {
+    // 원점에 걸쳐 있는 상자 A (크기: 2x2x2)
+    AABB boxA = { {-1.0f, -1.0f, -1.0f}, {1.0f, 1.0f, 1.0f} };
+
+    // 살짝 겹쳐 있는 상자 B
+    AABB boxB = { {0.5f, 0.5f, 0.5f}, {2.5f, 2.5f, 2.5f} };
+
+    if (checkOverlapAABBAABB(boxA, boxB)) {
+        std::cout << "두 AABB 상자가 오버랩(충돌)되었습니다." << std::endl;
+    } else {
+        std::cout << "충돌하지 않았습니다." << std::endl;
+    }
+
+    return 0;
+}
+
+```
+
+
+
+> [!info] AABB vs AABB 활용
+> AABB vs AABB는 연산이 가벼워 게임 엔진에서 "예선전" 개념으로 직접적인
+> 충돌 검사를 하기 전에 이검사를 먼저 진행한다
+> 
+> 1. 캐릭터나 복잡한 물체들은 감싸는 커다란 공통 AABB ㄱ생성
+> 2. 물체끼리 부딪혔는지 검사를 AABB vs AABB 활용
+> 3. 여기서 false 가 나면 내부의 복잡한 폴리곤 연산을 통째로 skip (Early Out)
+
+
+---
+## D. OBB vs OBB
+
+OOBB (Object Bounding Box) 
 
 ![[algo_collision_OBB_example.webp]]
 
 - AABB : 항상 x,y,z 측에 정렬 -> 회전하면 box의 사이즈가 커짐
 - OBB : 오브젝트와 함께 회전 -> 항상 딱 맞는 박스 유지
 
-## 1. 구성 요소
+### 1. 구성 요소
 
 ``` cpp
 
@@ -323,7 +896,7 @@ box.halfExtents = {2,1,1};
 	- 3D 에서 검사할 축은 총 15개
 	- OBB A의 3개 축, OBB B의 3개축, A의 축 * B축의 조합 9개 (외적)
 
-## 2. 예제 코드
+### 2. 예제 코드
 
 ``` cpp
 // 한 축에 두 OBB 를 투영해서 겹치는지 확인
@@ -349,9 +922,8 @@ bool overlapOnAxis(const OBB& a, const OBB& b, const Vector3f& axis)
 }
 ```
 
----
 
-## 3. 실전 코드
+### 3. 실전 코드
 
 ``` cpp
 // 두 OBB 사이의 collision 검사
@@ -415,3 +987,4 @@ bool OBBvsOBB(const OBB& a, const OBB& b)
 >
 
 ---
+
