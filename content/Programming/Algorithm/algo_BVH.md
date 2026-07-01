@@ -7,7 +7,7 @@ tags:
   - "#Graphics"
   - "#CPP"
 date: 2026-05-19
-draft: "False"
+draft: "True"
 description: BVH (Bounding volume Hierarchy), Octree 분석
 ---
 
@@ -56,6 +56,92 @@ AABB 교차 검사 -> 범위 비교 6번, 매우 빠름
 비용 = (왼쪽 표면적 / 부모 표먼적) * 왼쪽 삼각형수 +
        (오른쪽 표면적 / 부모 표면적) * 오른쪽 삼각형 수
 ```
+
+
+### BVH Algorithm
+
+#### 1. Median split 
+
+- 가장 긴축의 중앙값으로 반씩 자른다
+- 장점
+	- 구현 단순 O(N log N)
+- 단점
+	- 삼각형 분포를 전혀 고려 안함, 한쪽에 몰린 지오메트리면 트리가 불균형 해져서
+	  트레버셜 비용이 커짐
+
+#### 2. SAH (Surface Area Heuristic)
+
+- <strong style="color:#ffff80">레이가 이 박스에 들어올 확률은 표면적에 비례 한다</strong> 는 가정으로 분할 비용을 계산
+
+``` cpp
+cost (split) = C_traverse 
+             + (SA(left) / SA(parent)) * N_left * C_intersect
+             + (SA(right) / SA(parent)) * N_right * c_intersect 
+```
+
+- 모든 후보 분할 위치를 순회하며 가장 비용이 낮은 위치를 선택
+- 장점
+	- 트레버셜 품질이 현재 최고 수준, 오프라인 렌더러 표준
+- 단점
+	- 빌드 O(N^2) 또는 버킷 SAH로 O (N log N)이지만 상수가 큼
+	- 실시간 ㅆ니에서 매 프레임 리빌드 불가
+	- <strong style="color:#ffb15b">실시간 씬에서 매 프레임 리빌드 불가</strong>
+
+### 3. LBVH (Linear BVH) 
+
+- 삼각형 centroid를 Morton code로 인코딩 해서 정렬 이후 
+  패턴의 공통 prefix가 끊기는 지점에서 분할
+
+-  Morton code 란?
+	- x,y,z 좌표의 비트를 interleaving 해서 3D 공간 좌표를 1D로 매핑하는 것
+
+```
+eg)
+x = 001 -> 0 0 1
+y = 010 -> 0 1 0 
+z = 100 -> 1 0 0 
+... interlaving process...
+mortion = 100 010 001 
+```
+
+- 공간적으로 가까운 삼각형이 Morton 정렬 후에도 인접하게 위치하므로 
+  **정렬만 하면 자동으로 공간 분할이 된다**
+
+``` 
+sort by morton code -> [0000, 0001, 0011, 0100, 0110, 1000, 1001, 1111]
+최항위 비트가 바뀌는 지점 == 분할 포인트
+```
+
+- 장점
+	- 빌드 O (N log N), GPU 병렬화 매우 쉬움, 실시간 리빌드 가능
+- 단점
+	- 트레버셜 품질이 SAH 보다 낮음, Mortion grid 해상도에 따라 정밀도 제한
+
+
+#### 4. HLBVH (Hierarchical LBVH)
+
+- LBVH 단점을 보완한 hybrid
+	- 상위 레벨 : Morton code로 빠르게 대략전 분할 (GPU)
+	- 하위 레벨 : 리프 근처에서 SAH 로 품질 보안 (CPU)
+
+-  Nvidia, Optix, DXR 등 실시간 레이트레이싱 HW 가속 의 실제 구현 방식
+	- 장점 - 빌드 속도와 트레버셜 품질 둘다 준수
+	- 단점 구현 복잡도가 높음
+
+
+
+|         | Median Split | SAH   | LBVH  | HLBVH |
+| ------- | ------------ | ----- | ----- | ----- |
+| 빌드 속도   | ★★★★         | ★★    | ★★★★★ | ★★★★  |
+| 트레버셜 품질 | ★★           | ★★★★★ | ★★★   | ★★★★  |
+| 구현 난이도  | ★            | ★★★   | ★★★   | ★★★★★ |
+| GPU 친화성 | ✗            | ✗     | ✓     | ✓     |
+| 실시간 리빌드 | △            | ✗     | ✓     | ✓     |
+
+
+
+
+
 
 ---
 

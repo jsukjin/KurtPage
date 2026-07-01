@@ -13,9 +13,9 @@ description: collision 관련 algorithm 분석
 
 ---
 
-# 1. AABB
+# 1. Slab method
 
-- ray가 AABB 박스에 닿는지 확인하는 알고리즘
+- <strong style="color:#b3f594">Ray가 AABB 박스에 닿는지 확인하는 알고리즘</strong>
 - 슬랩(Slab)은 두 평행 평면 사이의 공간이며 X,Y,Z 3쌍의 슬랩으루 구성됨
 
 
@@ -23,7 +23,8 @@ description: collision 관련 algorithm 분석
 
 - `tMin < tMax` 이면 교차
 - `tMin`(노란점) = 박스 진입, `tMax`(초록점) = 박스 탈출
-- ray(파란색)은 `tMin` > `tMax` 이므로 구간 겹침 없음 
+- <strong style="color:#ffb15b">Ray (파란색) 은 아래의 조건일때 구간 겹침 없음</strong>
+	-  `tMin` > `tMax` 
 
 ## 1.1 구성
 
@@ -134,9 +135,9 @@ bool rayAABBIntersect(const Vector3f& origin,    //ray start point
 
 ---
 
-# 2. Triangle
+# 2. Möller–Trumbore
 
-- Ray Triangle 교차 테스트 (Möller–Trumbore 알고리즘)
+- <strong style="color:#b3f594">Ray 와 Triangle 교차 테스트 (Möller–Trumbore 알고리즘)</strong>
 
 ![[algo_collision_triangle.webp]]
 
@@ -287,7 +288,7 @@ if (det < 1e-6f)
 
 ---
 
-# 3. OBB
+# 3. OBB overlap
 
 - OOBB (Object Bounding Box) 
 
