@@ -130,7 +130,7 @@ bool rayTriangleIntersect(
         dir[0] * E2[1] - dir[1] * E2[0];    // 0*0 - (-1) * 4 = 4
     };
     
-    //3. det = E1 · h (내적)
+    //3. determinant = E1 · h (내적)
     // det = (2,4,0) · (0,-2,4)
     //  = 2 * 0 + 4* -2 + 0*4 = -8
     float det = E1[0] * h[0] + E1[1] * h[1] + E1[2] * h[2];
@@ -152,7 +152,7 @@ bool rayTriangleIntersect(
                    orig[1] - v0[1],
                    orig[2] - v0[2]};
 
-    //6. u = (s * h) · invDet
+    //6. u = (s * h) · invDet (내적)
     //s * h = (2,5,1) · (0, -2, 4)
     //      = 2 * 0 + 5* -2 + 1 * 4
     //      = 0 -10 +4 = -6
@@ -176,7 +176,7 @@ bool rayTriangleIntersect(
     if (v < 0.0f || u + v > 1.0f)
         return false;
         
-    //9. t = (E2 · q) * invDet (레이 위의 거리)
+    //9. t = (E2 · q) * invDet (레이 위의 거리) (dot)
     // E2 · q = (4,0,0) · (-4,2,-2) = -16 + 0 + 0 = -16
     // t = -16 * (-0.125) = 2.0
     t = (E[2]*q[0] + E2[1]*q[1] + E2[2]*q[2]) * invDet;

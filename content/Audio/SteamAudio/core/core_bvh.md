@@ -744,7 +744,7 @@ void BVH::build(const Mesh& mesh,
             왼쪽 상자1개, 오른쪽 상자 3개로 쪼개는게 최고라는 결론
             
             split.index = 1
-            (왼쪽에 1개 배치ㅗ디므로 커드라인 인덱스는 1)
+            (왼쪽에 1개 배치되므로 커드라인 인덱스는 1)
             
             [1] right child의 task (stak.push)
             
@@ -755,8 +755,12 @@ void BVH::build(const Mesh& mesh,
             leftChildIndex = (task.leftChildIndex + 2) * splitIndex; //3
             //1 + 2 * 1 = 3
             
-            결론 - '나중에 2번 노드를 만들건데 여기엔 1~3번 삼각형이 들어가고
-             이녀석의 자식들은 3번 노드로부터 배치해라'가 스택에 저장
+            결론 - 
+             다음 노르드를 2번(outputNodeIndex)에 만들껀데
+             삼각형은 1~3 (startIdx ~ endIdx)번 삼각형이 들어가고
+             이녀석의 자식들은 3번(leftChildIdx)의 노드에 배치하라 
+             
+             해당 내용이 stack에 저장
             
             [2] 곧바로 처리할 left child node task (task 교체)
             
@@ -796,6 +800,28 @@ void BVH::build(const Mesh& mesh,
                task.leftChildIndex + 2 };
                
             continue;
+            
+            
+            /*
+		        왜 right child를 보관하고 left child를 
+		        먼저 처리할까?
+		        -traversal 이 왼쪽을 먼 저 바문하니 별도의 왼쪽을 먼저
+		        처리해서 메머리를 가까이 배치한다
+		        
+		            [루트]
+			        /    \
+			      [L]    [R]
+			      / \    / \
+			    [LL][LR][RL][RR]
+			    
+			    1. 루트 처리 → 오른쪽(R) push, task = 왼쪽(L)
+				2. L 처리   → 오른쪽(LR) push, task = 왼쪽(LL)
+				3. LL 처리  → 리프 → stack.pop() → LR
+				4. LR 처리  → 리프 → stack.pop() → R
+				5. R 처리   → 오른쪽(RR) push, task = 왼쪽(RL)
+				6. RL 처리  → 리프 → stack.pop() → RR
+				7. RR 처리  → 리프 → stack.isEmpty() → break
+            */
         }
     }
 
@@ -897,7 +923,7 @@ Split BVH::sahSplit(GrowableBox* leafNodes,
         
         //step 1. axis별 정렬 및 왼쪽 상자들의 면적 예치(1st pass)
         
-        //1. 임시 정렬파능ㄹ 좌표 순서대로 줄 세운다
+        //1. 임시 정렬파를 좌표 순서대로 줄 세운다
         // Sort the leaves by centroid coordinates.
         std::sort(
         &centroidsForAxis[startIndex], 
@@ -939,13 +965,11 @@ Split BVH::sahSplit(GrowableBox* leafNodes,
         GrowableBox rightChildBox;
         rightChildBox.reset();
         
-        for (auto index = endIndex, 
-        numLeftChildren = endIndex - startIndex, 
-        numRightChildren = 1; 
-        
-        index > startIndex; 
-        
-        --index, --numLeftChildren, ++numRightChildren)
+        for (auto index = endIndex,
+                  numLeftChildren = endIndex - startIndex, 
+                  numRightChildren = 1; 
+             index > startIndex; 
+             --index, --numLeftChildren, ++numRightChildren)
         {
             //거꾸로 오면서 오른쪽 상자 면적을 누적 확장
             rightChildBox.growToContain(
