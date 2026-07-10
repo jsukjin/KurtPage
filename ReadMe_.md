@@ -76,5 +76,7 @@ git remote add upstream https://github.com/jackyzha0/quartz.git
 - Table of Contents
 - Automatic Table of Contents
 - Code Styler
-
+- Share tnoe
+- Image converter
+- better pdf export
 ---
