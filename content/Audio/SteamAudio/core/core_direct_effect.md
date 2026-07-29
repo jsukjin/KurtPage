@@ -1,5 +1,5 @@
 ---
-title: "[Core] Direct Effect 분석"
+title: "[Core] DirectEffect"
 author: KurtJang
 tags:
   - Blog

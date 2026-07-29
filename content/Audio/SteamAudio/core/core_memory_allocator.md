@@ -1,5 +1,5 @@
 ---
-title: "[Core] memory_allocator 분석"
+title: "[Core] MemoryAllocator"
 author: KurtJang
 tags:
   - Blog

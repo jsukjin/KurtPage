@@ -1,5 +1,5 @@
 ---
-title: "[Core] mesh 분석"
+title: "[Core] Mesh"
 author: KurtJang
 tags:
   - Blog

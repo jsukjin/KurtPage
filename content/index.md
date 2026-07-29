@@ -9,16 +9,19 @@ draft: "False"
 Thank you for vising my blog. <br>
 This is a space where I archive and share my learning
 
----
-# UE
+# Categoris 
 
-#UE #UEAudio 
+<strong style="color:#b3f594">Game Audio</strong>
 
+#UE #UEAudio #Wwise  #SteamAudio 
+<br>
+<strong style="color:#b3f594">Programming</strong>
 
-# Wwise
+#Programming #STL  #CPP 
+<br>
+<strong style="color:#b3f594">Automation</strong>
 
-#Wwise
-
+#n8n #Cloud #Docker  #Python 
 
 
 ----

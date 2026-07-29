@@ -1,5 +1,5 @@
 ---
-title: "[Core] AudioBuffer 분석"
+title: "[Core] AudioBuffer"
 author: KurtJang
 tags:
   - Blog

@@ -1,5 +1,5 @@
 ---
-title: "[Core] Panning Effect 분석"
+title: "[Core] PanningEffect"
 author: KurtJang
 tags:
   - Blog

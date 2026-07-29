@@ -1,5 +1,5 @@
 ---
-title: "[Core] Array<T,N> 분석"
+title: "[Core] Array"
 author: KurtJang
 tags:
   - Blog

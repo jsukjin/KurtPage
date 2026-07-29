@@ -1,5 +1,5 @@
 ---
-title: "[Core] SIMD 분석"
+title: "[Core] SIMD"
 author: KurtJang
 tags:
   - Blog

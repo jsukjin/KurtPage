@@ -1,5 +1,5 @@
 ---
-title: "[Core] util 분석"
+title: "[Core] Util"
 author: KurtJang
 tags:
   - Blog

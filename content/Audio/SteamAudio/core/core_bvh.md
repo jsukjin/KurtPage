@@ -1,5 +1,5 @@
 ---
-title: "[Core] BVH 분석"
+title: "[Core] BVH"
 author: KurtJang
 tags:
   - Blog
@@ -1116,10 +1116,10 @@ Hit BVH::intersect(const Ray& ray,
         // Check whether the ray passes through the bounding box of the
         // node.
         if (ray.intersect(node.boundingBox(), 
-            reciprocalDirection, 
-            directionSigns, 
-            task.tMin, 
-            task.tMax))
+                          reciprocalDirection, 
+                          directionSigns, 
+                          task.tMin, 
+                          task.tMax))
         {
             if (node.isLeaf())
             {
@@ -1415,16 +1415,28 @@ bool BVH::boxIntersectsBox(const Box& box1,
     return (dx == 0.0f && dy == 0.0f && dz == 0.0f);
 }
 
-/*AaBB 와 triangle 실제 겹치는가 체크 (복잡한 연산) */
+
+/* AABB vs Triangle 교차판정 
+ * SAT (Separating Axis Theorem) 사용
+   - 두 블록 도형이 분리되어 있으면, 반드시 
+     "이축으로 투영하면 겹치지 않는다" 는 분리측이 존재
+   - 반대로 모든 가능한 축에서 투영이 겹치면 교차
+*/
 bool BVH::boxIntersectsTriangle(const Box& box,
                                 const Mesh& mesh,
                                 int32_t triangleIndex)
 {
+	/*
+	 AABB vs TRiangle 분리 후보는 3가지
+	 1. 삼각형 평면의 법선 (normal)
+     2. AABB의 3개 축 (xy,z) - 이미 AABB 자체가 축 정렬이라 생략 가능
+     3. AABB 축 * 삼각형 변 = 3*3 = 9개 축
+	*/
+
     // if the bounding box of the triangle doesn't intersect the box, 
     // we shouldn't have reached this function
-
+    
     // if the plane of the triangle doesn't intersect the box, stop
-
     auto v0 = mesh.triangleVertex(triangleIndex, 0);
     auto v1 = mesh.triangleVertex(triangleIndex, 1);
     auto v2 = mesh.triangleVertex(triangleIndex, 2);
@@ -1449,17 +1461,114 @@ bool BVH::boxIntersectsTriangle(const Box& box,
     auto d1 = Vector3f::dot(normal, criticalPointOffset - v0);
     auto d2 = Vector3f::dot(normal, (extents - criticalPointOffset) - v0);
 
+/*
+	  STEP 1 - 삼각형 평면이 박스를 통과하는가?
+	- 박스의 min을 기준으로  normal vector 방향으로 가장 멀리있는 
+	  꼭지점을 찾는다
+	- normal의 각 성분이 양수이면 그쪽 방향 꼭짓점이 가장 멀리 있다
+	  
+	  eg)
+	  normal = (+,+.-) 이면
+	  criticalPointOffset = (extents.x, extents.y, 0)
+	  box.min 에서 (+x, +y, 0) 방향 꼭짓점이 normal vec 방향으로 가장 멀리 있음
+	  
+	  np + d1은 박스에서 normal 방향 가장 멀리있는 꼭짓점 삼각형 평면에 투영한
+	  부호가 있는 거리
+	  np + d2는 반대쪽 꼭짓점의 거리
+	  두값이 부호가 같으면?
+	   -> >0 ? 박스가 평면에 한쪽엠나 있다 -> 분리되어 있따 -> "교차 없음"
+	*/
+
     if ((np + d1) * (np + d2) > 0.0f)
         return false;
 
+	/*
+	 STEP 2 - 9개 axis 검사 (xy,yz,zx 평면 투영)
+	 - 삼각형 변 3개(e0,e1,e2)와 AABB 3개축을 교차한 9개의 분리축을 검사
+	 - 이걸 3D에서 직접하는 대신, 각 평면에 투영해서 2D로 처리
+     핵심은 2D로 투영해서 분리축 검사
+	 - 3D 삼각형 + AABB를 Xy 평면에 투영 -> 2D삼각형 + 2D삼각형
+	   
+	변(edge)의 법선이란?
+		v1
+	    /
+	   /  ← e0 방향
+	  /
+	v0
+	
+	변 e0 = v1 - v0 (ex,ey)
+	법선 nxy0 = (-e0.y, e0.x)
+	 - 변에 수직인 방향 (>> 이 방향으로 분리여부 검사)
+     - 해당 unit vec 방향으로 투영했을때 박스vs삼각형 겹치는지 확인	  
+	*/
+
+	
+	/*
+	 Step A : 변/벡터의 법선 계산
+	 
+		 Y
+	4 ┌──────────────┐
+	  │              │  박스
+	  │    v2(0,3)   │
+	  │   /          │
+	  │  /           │
+	2 │ v1(3,2)      │
+	  │/             │
+	0 └──v0(1,0)─────┘ X
+	  0              4
+
+	 e0 = v1 - v0 = (3-1, 2-0) = (2,2)
+	 nxy0 = (-e0.y, e0.x) = (-2,2)
+	 
+	 Step B : dxy0 계산
+	 
+	 dxy0 = -dot (nxy0, v0_xy)
+	        + max(0, extents.x * nxy0.x)
+	        + max(0, extents.y * nxy0.y)
+	          
+    이를 분해하면
+     -dot(nxy0, v0_xy) = 삼각형 변을 원점 기준으로 offset
+     max(0, extents.x 8 nxy0.x) + max(0, extetnx.y *nxy0.y)
+      = 박스에서 법선 방향으로 가장 멀리 튀어나온 꼭짓점끼리 offset
+    
+    구체적으로
+    nxy0 = (-2,2)
+     
+    max(0, 4 * (-2)) = max(0,-8) = 0 //x방향 : 음수이므로 기여 없음
+    max(0, 4 * 2) = max(0, 8) = 8    //y방향 : 양수이므로 8 기여
+    -dot((-2,2), (1,0)) = -(02*1 + 2*0) = 2
+    dxy0 = 2 + 0 + 8 =- 10
+    
+    Step C : 최종판정
+     dot (nxy,0 , pmin_xy) + dxy0 < 0 ?
+     
+     dot ((-2,2), (0,0)) + 10 = 0 + 10 = 10
+     10 < 0 ? false -> 이 변에서는 분리 없음
+	*/
+
     // actual intersection tests
-
     // xy plane
-
+    /*
+     Vector3f e0 = v1 - v0; //변0
+     Vector3f e1 = v2 - v1; //변1
+     Vector3f e2 = v0 - v2; //변2
+    */
     Vector3f e0 = v1 - v0;
     Vector3f e1 = v2 - v1;
     Vector3f e2 = v0 - v2;
 
+	/*
+	 xy 평면 투영 (z축 x rkr qus)
+	 nxy0 = e0ㅇ,ㄹ xy평면에서 90도 회전 = 변의 법선
+	 
+	 eg)
+	 - (-ey, ex)는 2D 벡터에서 (ex,ey)를 90도 회전한 unit vector
+	 - 삼각형 변의 unit vec 방향으로 투영했을떼
+	   박스와 삼각형이 분리되는지 확인
+	   
+	   
+	   
+	*/
     auto nxy0 = Vector2f(-e0.y(), e0.x());
     auto nxy1 = Vector2f(-e1.y(), e1.x());
     auto nxy2 = Vector2f(-e2.y(), e2.x());

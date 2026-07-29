@@ -1,5 +1,5 @@
 ---
-title: "[Core] Delay Effect 분석"
+title: "[Core] DelayEffect"
 author: KurtJang
 tags:
   - Blog

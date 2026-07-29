@@ -1,5 +1,5 @@
 ---
-title: "[Core] EQ Effect 분석"
+title: "[Core] EQEffect"
 author: KurtJang
 tags:
   - Blog
